@@ -3198,17 +3198,21 @@ Authentication: Use the GitHub credentials stored in project context. Never log,
 </footer>
 
 <script>
-// Transform all .prompt-block elements into terminal UI
+// ─── STEP 1: STASH PROMPT DATA BEFORE DOM MUTATION ───────────────────────────
+// The transformer below wipes inner HTML. The slide engine runs LATER (on button
+// click) and needs the raw text. We stash it in data attributes NOW so both
+// the terminal UI renderer and the slide engine read from the same source.
 document.querySelectorAll('.prompt-block').forEach(function(block) {
-  // Get the label text
   var labelEl = block.querySelector('.prompt-label');
-  var labelText = labelEl ? labelEl.textContent.trim() : 'Prompt';
+  var pEl     = block.querySelector('p');
+  block.dataset.promptLabel = labelEl ? labelEl.textContent.trim() : 'Prompt';
+  block.dataset.promptText  = pEl     ? pEl.textContent.trim()     : '';
+});
 
-  // Get the prompt text (from <p> inside)
-  var pEl = block.querySelector('p');
-  var promptText = pEl ? pEl.textContent.trim() : '';
-
-  // Build terminal HTML
+// ─── STEP 2: RENDER TERMINAL UI ──────────────────────────────────────────────
+document.querySelectorAll('.prompt-block').forEach(function(block) {
+  var labelText  = block.dataset.promptLabel;
+  var promptText = block.dataset.promptText;
   block.innerHTML =
     '<div class="prompt-titlebar">' +
       '<div class="prompt-dots">' +
@@ -3219,61 +3223,50 @@ document.querySelectorAll('.prompt-block').forEach(function(block) {
       '<span class="prompt-tab">' + labelText + '</span>' +
       '<button class="prompt-copy-btn" data-text="' + promptText.replace(/"/g, '&quot;') + '">Copy</button>' +
     '</div>' +
-    '<div class="prompt-content"><span class="prompt-text">' + promptText.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span></div>';
+    '<div class="prompt-content"><span class="prompt-text">' +
+      promptText.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+    '</span></div>';
 });
 
-// Copy button handler
+// ─── STEP 3: UNIFIED COPY HANDLER ────────────────────────────────────────────
+function fallbackCopy(text, cb) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta); if (cb) cb();
+}
 document.addEventListener('click', function(e) {
-  if (!e.target.classList.contains('prompt-copy-btn')) return;
-  var text = e.target.getAttribute('data-text');
-  navigator.clipboard.writeText(text).then(function() {
-    e.target.textContent = 'Copied ✓';
-    e.target.classList.add('copied');
-    setTimeout(function() {
-      e.target.textContent = 'Copy';
-      e.target.classList.remove('copied');
-    }, 2000);
-  }).catch(function() {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    e.target.textContent = 'Copied ✓';
-    e.target.classList.add('copied');
-    setTimeout(function() {
-      e.target.textContent = 'Copy';
-      e.target.classList.remove('copied');
-    }, 2000);
-  });
+  var btn = e.target.closest ? e.target.closest('.prompt-copy-btn, .ss-prompt-copy')
+                              : (e.target.classList.contains('prompt-copy-btn') || e.target.classList.contains('ss-prompt-copy') ? e.target : null);
+  if (!btn) return;
+  var text = btn.getAttribute('data-text');
+  function confirm() {
+    var prev = btn.textContent;
+    btn.textContent = 'Copied ✓'; btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = prev.indexOf('✓') > -1 ? 'Copy' : prev; btn.classList.remove('copied'); }, 2000);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(confirm).catch(function() { fallbackCopy(text, confirm); });
+  } else { fallbackCopy(text, confirm); }
 });
 
-// ─── SLIDESHOW ENGINE ──────────────────────────────────────────
+// ─── SLIDESHOW ENGINE ────────────────────────────────────────────────────────
 var SS = { slides: [], current: 0, built: false };
 
-// Each entry in SS.slides: { type, html, bg }
-// Types: title | section | content | prompt | appendix | workflow-context | workflow-prompt
+function mk(type, html) { return { type: type, html: html }; }
 
-function mk(type, html, bg) { return { type: type, html: html, bg: bg || '' }; }
+function esc(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-function esc(str) { return str.replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
+// ALWAYS read from dataset: the prompt-block p tags are gone after the transformer runs
 function getPromptText(card) {
   var pb = card.querySelector('.prompt-block');
-  if (!pb) return '';
-  var p = pb.querySelector('p, .prompt-text');
-  return p ? p.textContent.trim() : '';
+  return pb ? (pb.dataset.promptText || '') : '';
 }
-
 function getPromptLabel(card) {
   var pb = card.querySelector('.prompt-block');
-  if (!pb) return '';
-  var lbl = pb.querySelector('.prompt-label');
-  return lbl ? lbl.textContent.trim() : 'Prompt';
+  return pb ? (pb.dataset.promptLabel || 'Prompt') : 'Prompt';
 }
+
 
 function metaGrid(card) {
   var row = card.querySelector('.skill-meta-row');

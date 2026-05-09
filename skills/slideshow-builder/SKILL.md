@@ -249,3 +249,143 @@ The following must be true before `git push`:
 3. Writing style check (Phase 5) passes: 0 hype words in prose.
 4. `wc -l index.html` is less than 4500 lines (guard against runaway duplication).
 5. `curl -s -o /dev/null -w "%{http_code}" https://shertokj.github.io/corwork_finance_guide/` returns 200 after deployment.
+
+---
+
+## Functional Flow Tests (Phase 3 Extension)
+
+The static Skeptic agent checks are necessary but not sufficient. The following
+functional tests must also pass. They verify the runtime behaviour of the
+slideshow — the flows a user actually exercises — not just the code structure.
+
+### Root Cause of the Slideshow Button Failure (May 2026)
+
+The page-load prompt-block transformer ran at DOMContentLoaded and replaced every
+`.prompt-block`'s innerHTML, destroying the `<p>` tags. The slide engine called
+`getPromptText()` on click — after the transformer had already run. It found no
+`<p>` elements and returned empty strings. Every prompt slide rendered blank.
+
+**The fix:** stash all prompt data into `data-prompt-text` and `data-prompt-label`
+attributes BEFORE the transformer mutates the DOM. The slide engine then reads from
+`dataset.promptText` and `dataset.promptLabel`, which survive the transformation.
+
+**The lesson for the skill:** static pattern checks cannot catch timing bugs.
+Functional flow tests must verify the execution order and the data path.
+
+### F1 — Execution Order
+
+```python
+stash_idx    = html.find('STEP 1: STASH PROMPT DATA')
+transform_idx = html.find('STEP 2: RENDER TERMINAL UI')
+engine_idx   = html.find('SLIDESHOW ENGINE')
+assert stash_idx < transform_idx < engine_idx, "Execution order violated"
+```
+
+### F2 — Data Path: getPromptText reads dataset, not DOM
+
+```python
+get_fn_body = extract_function_body(html, 'getPromptText')
+assert 'dataset.promptText' in get_fn_body, "Must read from dataset"
+assert "querySelector('p" not in get_fn_body, "Must NOT query <p> tags (destroyed by transformer)"
+assert "querySelector(\"p" not in get_fn_body, "Must NOT query <p> tags"
+```
+
+### F3 — Data Path: getPromptLabel reads dataset, not DOM
+
+```python
+get_lbl_body = extract_function_body(html, 'getPromptLabel')
+assert 'dataset.promptLabel' in get_lbl_body, "Must read from dataset"
+assert "querySelector('.prompt-label')" not in get_lbl_body, "Must NOT query .prompt-label (destroyed)"
+```
+
+### F4 — enterSlideshow() flow is intact
+
+```python
+enter_body = extract_function_body(html, 'enterSlideshow')
+assert 'buildSlides()' in enter_body, "Must call buildSlides"
+assert "classList.add('active')" in enter_body, "Must show overlay"
+assert "overflow = 'hidden'" in enter_body, "Must lock page scroll"
+```
+
+### F5 — Button exists and calls enterSlideshow
+
+```python
+assert re.search(r"onclick=['\"]enterSlideshow\(\)['\"]", html), "Button must exist"
+```
+
+### F6 — Overlay elements exist exactly once
+
+```python
+assert html.count('id="slideshowOverlay"') == 1, "Exactly one overlay"
+assert html.count('id="ssViewport"') == 1, "Exactly one viewport"
+```
+
+### F7 — Copy buttons carry data-text
+
+```python
+copy_btns = re.findall(r'class="prompt-copy-btn"', html)
+data_btns  = re.findall(r'class="prompt-copy-btn"[^>]*data-text', html)
+assert len(copy_btns) == len(data_btns), "Every copy button must have data-text"
+```
+
+### F8 — exitSlideshow restores scroll
+
+```python
+exit_body = extract_function_body(html, 'exitSlideshow')
+assert "overflow = ''" in exit_body, "Must restore page scroll on exit"
+```
+
+### F9 — buildSlides has double-build guard
+
+```python
+assert 'SS.built = true' in html, "Must set built flag"
+assert 'if (SS.built) return' in html, "Must guard against double build"
+```
+
+### Running functional tests
+
+Add these checks to Phase 3 (Static Test), immediately after the duplicate
+function checks. All F1–F9 tests must pass before proceeding to Phase 4.
+
+```bash
+python3 << 'PYEOF'
+import re, sys
+html = open('index.html').read()
+
+def check(label, condition):
+    print(f"  {label}: {'✓' if condition else 'FAIL'}")
+    if not condition: sys.exit(1)
+
+def fn_body(name):
+    m = re.search(rf'function {name}\([^)]*\)\s*\{{(.*?)\}}', html, re.DOTALL)
+    return m.group(1) if m else ''
+
+check('F1 stash before transform', html.find('STEP 1') < html.find('STEP 2') < html.find('SLIDESHOW ENGINE'))
+check('F2 getPromptText reads dataset', 'dataset.promptText' in fn_body('getPromptText'))
+check('F2 getPromptText not reading p tag', "querySelector('p" not in fn_body('getPromptText'))
+check('F3 getPromptLabel reads dataset', 'dataset.promptLabel' in fn_body('getPromptLabel'))
+check('F4 enterSlideshow calls buildSlides', 'buildSlides()' in fn_body('enterSlideshow'))
+check('F4 enterSlideshow shows overlay', "classList.add('active')" in fn_body('enterSlideshow'))
+check('F4 enterSlideshow locks scroll', "overflow = 'hidden'" in fn_body('enterSlideshow'))
+check('F5 button calls enterSlideshow', bool(re.search(r"onclick=['\"]enterSlideshow\(\)['\"]", html)))
+check('F6 one overlay', html.count('id="slideshowOverlay"') == 1)
+check('F6 one viewport', html.count('id="ssViewport"') == 1)
+check('F8 exitSlideshow restores scroll', "overflow = ''" in fn_body('exitSlideshow'))
+check('F9 built guard', 'SS.built = true' in html and 'if (SS.built) return' in html)
+print('All functional tests passed.')
+PYEOF
+```
+
+---
+
+## Updated Deployment Gate (8 + 9 checks)
+
+The original 8 gates plus:
+- [ ] F1 Execution order: stash → transform → engine
+- [ ] F2 getPromptText reads `dataset.promptText`, not `<p>`
+- [ ] F3 getPromptLabel reads `dataset.promptLabel`
+- [ ] F4 enterSlideshow calls buildSlides, shows overlay, locks scroll
+- [ ] F5 At least one button with `onclick="enterSlideshow()"`
+- [ ] F6 Exactly one `#slideshowOverlay` and one `#ssViewport`
+- [ ] F8 exitSlideshow sets `body.style.overflow = ''`
+- [ ] F9 buildSlides has `SS.built` guard
