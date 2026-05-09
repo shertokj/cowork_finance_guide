@@ -802,6 +802,7 @@
   <a href="#appendix-skills">A · Skills</a>
   <a href="#appendix-routines">B · Routines</a>
   <a href="#appendix-artifacts">C · Artifacts</a>
+  <a href="#appendix-github">D · GitHub</a>
 </nav>
 
 <!-- BODY -->
@@ -2048,7 +2049,330 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
   </div>
 </footer>
 
-<script>
+<!-- ═══════════════════════════════════════════════════════════════
+     APPENDIX D — GITHUB INTEGRATION
+═══════════════════════════════════════════════════════════════ -->
+
+<div id="appendix-github" class="appendix-divider">
+  <div class="appendix-divider-eyebrow">Appendix D</div>
+  <h2>Claude Cowork <em>+ GitHub</em></h2>
+  <p>How to connect Cowork to your GitHub repository so Claude can publish polished HTML analysis pages as live websites, maintain a version-controlled backup of your prospect data, and do all of it autonomously — without you touching a terminal.</p>
+</div>
+
+<div class="appendix-body">
+
+  <p>GitHub is not just a place to store code. For a cash investment SVP running a Cowork-assisted practice, it serves two distinct functions. First, it is a publishing platform: any HTML file pushed to a GitHub Pages-enabled repository becomes a live, publicly accessible URL within 30 seconds. Second, it is an automatic, version-controlled backup: every file Claude commits carries a timestamp, a change description, and a full history of every prior version. Neither function requires you to understand git or write a single line of code. Claude handles every interaction with GitHub on your behalf.</p>
+
+  <p>This appendix covers the setup once, explains the two use cases in depth, and provides the exact Cowork prompts to operate each workflow from that point forward.</p>
+
+  <hr class="rule">
+
+  <h3>Why GitHub for a Finance Prospecting Practice</h3>
+
+  <p>Most practitioners in your role manage analysis outputs and contact data through a combination of email attachments, shared Drive folders, and CRM exports. The problem with that architecture is distribution friction. Sending a prospect a PDF of your weekly market analysis means they receive a file, file it somewhere, and read it once if at all. Sending them a URL to a clean, well-designed webpage — one that updates every week, carries your name in the domain, and renders perfectly on any device — is a qualitatively different thing. It positions you as a firm that produces institutional-quality research, not someone who sends attachments.</p>
+
+  <p>GitHub Pages makes this possible at no cost. Every repository on GitHub can have an associated Pages site at a URL in the format <code>username.github.io/repository-name</code>. Claude can publish to that URL automatically as part of any routine that produces an HTML output. The prospect receives a link, not a file. The link is always current.</p>
+
+  <p>The backup use case is equally straightforward. GitHub maintains a full version history of every file it tracks. If Claude commits your master coverage sheet as a CSV every Friday, you have 52 timestamped snapshots at the end of the year, each recoverable in one command. If a routine accidentally overwrites a field, the prior version is one step away. If you want to see what your pipeline looked like three months ago, that record exists without you having taken any deliberate action to preserve it.</p>
+
+  <hr class="rule">
+
+  <h3>Part 1 — Setup: Connecting Cowork to GitHub</h3>
+
+  <p>The connection requires three things: a GitHub account, a Personal Access Token (PAT) that gives Claude permission to push files, and a one-time project configuration inside Cowork. Once configured, every subsequent GitHub interaction is handled by Claude with no further credential management required on your part.</p>
+
+  <!-- STEP 1 -->
+  <div class="skill-card">
+    <div class="skill-card-header">
+      <span class="skill-badge">Step 01</span>
+      <h3>Create Your GitHub Repository</h3>
+    </div>
+    <div class="skill-card-body">
+      <p>Go to <code>github.com</code> and sign in. Click the <strong>+</strong> icon in the top right and select <strong>New repository</strong>. Name it something like <code>cash-investment-research</code>. Set it to <strong>Public</strong> (required for free GitHub Pages hosting) or <strong>Private</strong> if your firm's compliance policy requires it — note that private repos require a paid GitHub plan for Pages. Leave all other settings at their defaults and click <strong>Create repository</strong>.</p>
+      <p>You now have an empty repository. You will not need to interact with it manually again after this setup — Claude will handle all future file operations.</p>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="skill-card">
+    <div class="skill-card-header">
+      <span class="skill-badge">Step 02</span>
+      <h3>Generate a Personal Access Token</h3>
+    </div>
+    <div class="skill-card-body">
+      <p>The PAT is a credential that allows Claude to push files to your repository on your behalf. It is the only credential you will ever need to handle manually for this workflow.</p>
+      <p>In GitHub, go to <strong>Settings</strong> (your profile, top right) → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong> → <strong>Generate new token (classic)</strong>. Give it a name like "Claude Cowork Integration." Set expiration to <strong>No expiration</strong> or a date far in the future. Under <strong>Select scopes</strong>, check only <strong>repo</strong> (this grants full repository read/write). Click <strong>Generate token</strong> and copy the value immediately — it is shown only once.</p>
+      <div class="callout callout-warn">
+        <div class="callout-title">Security Note</div>
+        <p>Treat this token like a password. Do not paste it into emails, shared documents, or chat interfaces other than directly into your Cowork project context as described in Step 3. If it is ever compromised, revoke it immediately from the same GitHub settings page and generate a new one.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="skill-card">
+    <div class="skill-card-header">
+      <span class="skill-badge">Step 03</span>
+      <h3>Add GitHub Credentials to Your Cowork Project</h3>
+    </div>
+    <div class="skill-card-body">
+      <p>Open Claude Desktop, go to your Finance Prospecting project, and open <strong>Project Settings → Context</strong>. Add the following lines to the bottom of your existing project context instruction set, substituting your actual values:</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Add to Project Context</div>
+        <p>GitHub integration is enabled for this project.
+GitHub username: [your GitHub username]
+Repository name: [your repository name, e.g. cash-investment-research]
+Personal Access Token: [paste your PAT here]
+Default commit author: [Your Name] &lt;[your email]&gt;
+Pages URL: https://[username].github.io/[repository-name]/
+
+When pushing files to GitHub, always commit with a descriptive message that includes the date and the nature of the content. Never push files containing raw personal data (phone numbers, email addresses) to a public repository — export those fields as blank or hashed in any file destined for GitHub.</p>
+      </div>
+      <p>Claude will reference these values whenever a task involves GitHub. The PAT is stored only in your project context, which is private to your Cowork session and never shared or used outside it.</p>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="skill-card">
+    <div class="skill-card-header">
+      <span class="skill-badge">Step 04</span>
+      <h3>Enable GitHub Pages on the Repository</h3>
+    </div>
+    <div class="skill-card-body">
+      <p>This is a one-time step Claude can execute for you. Paste this task into Cowork after completing Steps 1–3:</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ One-Time Setup Task</div>
+        <p>Set up GitHub Pages on my repository. Using my GitHub credentials from project context, do the following:
+
+1. Create a file at .github/workflows/deploy.yml in my repository with a GitHub Actions workflow that deploys the repository contents to GitHub Pages on every push to the main branch. Use actions/checkout@v4, actions/configure-pages@v5, actions/upload-pages-artifact@v3, and actions/deploy-pages@v4. Set permissions for pages write and id-token write.
+
+2. Enable GitHub Pages via the GitHub API with build_type set to "workflow".
+
+3. Confirm the Pages URL is live by checking the API response for html_url.
+
+Report back the live URL when complete.</p>
+      </div>
+      <p>Claude will push the workflow file, call the GitHub API to enable Pages, and return the live URL. From this point forward, every HTML file pushed to the main branch deploys automatically within 30–60 seconds.</p>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <h3>Part 2 — Use Case One: Publishing Weekly Analysis as a Live Website</h3>
+
+  <p>The core idea is this: instead of sending a prospect a PDF or an email with inline market commentary, you send them a URL. That URL hosts a clean, well-designed webpage with your analysis, your name, and your firm's positioning — formatted to the same standard as this guide. It is always current, always accessible, and carries a level of production quality that a PDF attachment does not.</p>
+
+  <p>The workflow requires no manual steps after setup. Claude generates the HTML, pushes it to GitHub, and the page goes live. The prospect receives a link in your outreach email. When you update the analysis next week, the same URL reflects the new content automatically — or you publish a new dated URL and send an update. Both approaches have merit depending on your relationship with the recipient.</p>
+
+  <h3>What a Prospect-Facing Analysis Page Should Contain</h3>
+
+  <p>The most effective format for a cash investment audience is a one-page market brief with three sections: the current rate environment (SOFR, T-bill yields, CP spreads, MMF yields — the same data from the Morning Market Open routine), a short-duration portfolio perspective (what the rate environment implies for cash investors with a 0–12 month horizon), and a section specific to the prospect's situation (their firm's cash balance, any relevant credit or earnings development, a tailored observation connecting market conditions to their specific position). The third section is what makes it worth sending. Generic market commentary is available everywhere. A page that references their firm's Q1 earnings and connects that to a specific rate move is not.</p>
+
+  <!-- ROUTINE CARD -->
+  <div class="routine-card">
+    <div class="routine-header">
+      <span class="routine-index">Routine</span>
+      <h3>Weekly Analysis Page — Generate and Publish</h3>
+      <span class="routine-freq">Weekly · Friday 2 PM</span>
+    </div>
+    <div class="routine-body">
+      <div class="trigger-row">
+        <span class="trigger-tag">Market Rate Digest skill</span>
+        <span class="trigger-tag">Pre-Call Research skill</span>
+        <span class="trigger-tag">FactSet · GitHub</span>
+      </div>
+      <p>Generates a polished HTML analysis page each Friday, publishes it to GitHub Pages, and returns the live URL for use in outreach that week.</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Weekly Publish Routine Prompt</div>
+        <p>Generate and publish this week's market analysis page. Follow this sequence:
+
+Step 1 — Compile market data. Using the Market Rate and Instrument Digest skill, pull current SOFR, EFFR, T-bill yields (1M, 3M, 6M), CP/CD spreads, and MMF 7-day yield. Note the week-over-week change for each.
+
+Step 2 — Write the analysis. Produce three sections: (a) Rate Environment: a two-paragraph factual summary of where rates and spreads moved this week and why, citing data from Step 1 with no forecasting language; (b) Cash Portfolio Implications: one paragraph on what this week's moves mean for a corporate cash portfolio with a 0–12 month investment horizon, specifically for managers evaluating the relative value of T-bills, CP, CDs, and government MMFs at current spreads; (c) Watch List: two or three specific names or sectors from my counterparty watchlist where a development this week (rating action, earnings, regulatory news) is worth noting for a cash investment audience.
+
+Step 3 — Build the HTML page. Create a single self-contained HTML file named [YYYY-MM-DD]-weekly-brief.html. Design it to the same quality standard as this guide: clean typography (DM Sans and DM Serif Display from Google Fonts), structured sections with clear headers, a data table for the rate snapshot, and a footer with my name and the publication date. The page should be professional enough to share with an institutional contact — no rough edges, no placeholder text.
+
+Step 4 — Push to GitHub. Commit the file to my repository in a folder named /analysis/. Commit message: "Weekly brief [YYYY-MM-DD]". The GitHub Pages deployment will trigger automatically.
+
+Step 5 — Return the live URL. Wait 45 seconds after the push, then confirm the page is accessible at https://[username].github.io/[repository]/analysis/[YYYY-MM-DD]-weekly-brief.html and return the URL.
+
+Save the URL to a running log in my Google Drive at Prospecting/Research/weekly-brief-log.sheet, adding a new row with: date, URL, headline rate moves (one line), and a note on the watch list names covered.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARGETED VARIANT -->
+  <div class="routine-card">
+    <div class="routine-header">
+      <span class="routine-index">Variant</span>
+      <h3>Prospect-Specific Analysis Page</h3>
+      <span class="routine-freq">On-demand · Before high-priority outreach</span>
+    </div>
+    <div class="routine-body">
+      <div class="trigger-row">
+        <span class="trigger-tag">Pre-Call Research skill</span>
+        <span class="trigger-tag">Market Rate Digest skill</span>
+        <span class="trigger-tag">FactSet · GitHub</span>
+      </div>
+      <p>A targeted variant that generates a page customized to a specific prospect — referencing their firm's cash position, recent news, and a specific market development relevant to their situation. Used before high-priority first-touch or re-engagement outreach where a generic brief would be insufficient.</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Prospect-Specific Page Prompt</div>
+        <p>Generate and publish a prospect-specific analysis page for [Contact Name] at [Firm].
+
+Step 1 — Research the prospect. Run the Pre-Call Research Protocol for this contact. Pull their firm's most recently reported cash balance, any Q1/Q2 earnings commentary on liquidity or investment policy, and any credit or ratings developments in the last 60 days.
+
+Step 2 — Identify the hook. Find one specific connection between this week's market data and something specific about their firm's situation. Examples: their cash balance increased 30% year-over-year in a week when T-bill yields moved 15bps — there is a reinvestment decision embedded in that; their firm's CP issuer rating was affirmed this week in a market where A1/P1 spreads widened — their paper is relatively better positioned; they hold significant money market fund allocations and the SEC just published new MMF liquidity guidance. The hook must be specific, not generic.
+
+Step 3 — Build the HTML page. Create a page named [firm-slug]-[YYYY-MM-DD]-brief.html. Structure: a short header identifying the recipient's firm and the date; the rate snapshot table (same format as the weekly brief); a two-paragraph market context section; a one-paragraph section titled "[Firm Name] — Specific Consideration" that delivers the hook from Step 2 with data citations; a brief closing section on how I approach cash investment management for firms in their position. Do not include my contact information — I will add a call to action in the outreach email that links to this page.
+
+Step 4 — Push to GitHub in /analysis/prospects/[firm-slug]/ and return the live URL.
+
+Step 5 — Draft the outreach email. Using the Outreach Voice skill, draft a four-sentence first-touch email that leads with the hook, references the analysis page by URL in sentence three, and closes with a meeting request. Add it to my Outreach Queue sheet.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">On Public vs Private Pages</div>
+    <p>Analysis pages published to GitHub Pages are publicly accessible — anyone with the URL can read them, but the URL is not indexed or discoverable unless you share it. This is effectively security-by-obscurity, which is appropriate for market commentary but not for anything containing client-specific data, portfolio positions, or non-public information. The page should contain only market observations and publicly available firm data. Anything proprietary stays in Drive.</p>
+  </div>
+
+  <hr class="rule">
+
+  <h3>Part 3 — Use Case Two: GitHub as Prospect Data Backup</h3>
+
+  <p>Your master coverage sheet, outreach queue, and credit monitor log represent months of accumulated research. They live in Google Drive, which is reliable, but Drive provides no version history on Sheets beyond its own 30-day revision history, no ability to restore a specific named snapshot from six months ago, and no structured audit trail that shows what changed, when, and why. GitHub provides all three as a standard feature of how it works.</p>
+
+  <p>The mechanism is simple: at the end of each week, Claude exports your key data files from Google Drive as CSV files and commits them to a private subdirectory in your GitHub repository. Each commit is timestamped and carries a message describing the state of the pipeline that week. Over time, this creates a complete, searchable history of your coverage practice — every contact added, every status change, every outreach campaign — recoverable to any point in time.</p>
+
+  <p>The backup repository should be <strong>private</strong>. Contact names, email addresses, and relationship notes are personal data; they should not be publicly accessible on a GitHub Pages site. This is a separate repository from the one used for publishing analysis pages, or a private subdirectory that is excluded from the Pages deployment via a <code>.gitignore</code> configuration — Claude will set this up correctly when you run the initialization routine below.</p>
+
+  <!-- BACKUP ROUTINE -->
+  <div class="routine-card">
+    <div class="routine-header">
+      <span class="routine-index">Routine</span>
+      <h3>Weekly Data Backup to GitHub</h3>
+      <span class="routine-freq">Weekly · Friday 5 PM</span>
+    </div>
+    <div class="routine-body">
+      <div class="trigger-row">
+        <span class="trigger-tag">Google Drive</span>
+        <span class="trigger-tag">Google Sheets</span>
+        <span class="trigger-tag">GitHub</span>
+      </div>
+      <p>Exports the four core data files to GitHub as CSVs with a structured commit message summarizing the week's pipeline state. Runs after the Coverage List Refresh and Pipeline Follow-Up Audit have completed for the week.</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Weekly Backup Routine Prompt</div>
+        <p>Run the weekly GitHub data backup. Export the following files from Google Drive and commit them to my GitHub repository under /data/backups/[YYYY-MM-DD]/:
+
+File 1 — master-coverage.sheet: Export the Contacts tab as CSV named contacts-[YYYY-MM-DD].csv. Before exporting, remove the Email Address column and replace with a blank column labeled "email_redacted" — email addresses should not be committed to GitHub even in a private repo.
+
+File 2 — Outreach Queue (current month tab): Export as CSV named outreach-queue-[YYYY-MM-DD].csv. Remove the Draft Body column (replace with blank "draft_redacted") — email draft content should not be version-controlled externally.
+
+File 3 — active-counterparties.sheet (main tab): Export as CSV named counterparties-[YYYY-MM-DD].csv. No redactions required — this contains only public ratings data.
+
+File 4 — Credit Monitor Log (current year): Export the text content as a plain .txt file named credit-log-[YYYY].txt.
+
+Commit message format: "Weekly backup [YYYY-MM-DD] — [N] total contacts, [N] active, [N] dormant, [N] outreach sent this week"
+
+Pull the pipeline summary numbers from master-coverage.sheet before committing so the commit message is accurate. After the push completes, confirm the commit SHA and return it so I have a reference point for this week's snapshot.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESTORE ROUTINE -->
+  <div class="routine-card">
+    <div class="routine-header">
+      <span class="routine-index">Routine</span>
+      <h3>Restore a Prior Coverage Snapshot</h3>
+      <span class="routine-freq">On-demand</span>
+    </div>
+    <div class="routine-body">
+      <div class="trigger-row">
+        <span class="trigger-tag">GitHub</span>
+        <span class="trigger-tag">Google Drive</span>
+        <span class="trigger-tag">Google Sheets</span>
+      </div>
+      <p>Retrieves a specific historical version of the coverage data from GitHub and restores it to a new Drive sheet for review — without overwriting the current live sheet. Used when a routine has introduced an error, a contact record needs to be recovered, or you want to compare the pipeline against a prior state.</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Restore Routine Prompt</div>
+        <p>Restore a prior coverage snapshot from GitHub. I want to retrieve the contacts backup from [date or approximate date — e.g., "the first Friday of March 2026" or a specific commit SHA if I have it].
+
+Step 1 — Find the commit. Search my GitHub repository's commit history in /data/backups/ for the backup closest to [date]. List the three nearest commits with their dates and pipeline summary from the commit message so I can confirm which one to restore.
+
+Step 2 — Retrieve the file. Once I confirm the target commit, fetch contacts-[date].csv from that commit.
+
+Step 3 — Restore to Drive. Import the CSV into a new Google Sheet in Prospecting/Coverage Lists/ named "Restored Snapshot — [date]". Do not modify or overwrite master-coverage.sheet.
+
+Step 4 — Summarize the differences. Compare the restored snapshot against the current master-coverage.sheet on two dimensions: contacts that exist in the snapshot but not in the current sheet (potentially deleted); and contacts whose Tier or Status field differs between the two versions. Present as a two-column diff table.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <h3>Part 4 — The GitHub Skill: Adding GitHub to Your Project</h3>
+
+  <p>Rather than include GitHub instructions in every individual routine prompt, the cleaner approach is to create a dedicated GitHub skill that Claude applies automatically whenever a task involves pushing or pulling from the repository. This skill encodes your credentials reference, your commit message conventions, your privacy rules (what gets redacted before any push), and the repository structure — so every GitHub interaction is consistent without you specifying it each time.</p>
+
+  <div class="skill-card">
+    <div class="skill-card-header">
+      <span class="skill-badge">Skill 08</span>
+      <h3>GitHub Integration</h3>
+    </div>
+    <div class="skill-card-body">
+      <div class="skill-meta-row">
+        <div class="skill-meta-item"><strong>Trigger</strong>GitHub push, publish, backup, commit, deploy, Pages</div>
+        <div class="skill-meta-item"><strong>Connectors Used</strong>Claude in Chrome, bash (via Cowork computer use)</div>
+        <div class="skill-meta-item"><strong>Output</strong>Committed files, live URLs, commit SHAs</div>
+      </div>
+      <p>This skill governs all GitHub interactions: repository structure, commit conventions, privacy rules, and the Pages deployment confirmation flow. Install it the same way as Skills 01–07: Project Settings → Skills → Add Skill.</p>
+      <div class="prompt-block">
+        <div class="prompt-label">→ Skill Creation Prompt — Paste into Skill Body</div>
+        <p>When any task involves pushing files to, pulling files from, or managing my GitHub repository, apply the following rules.
+
+Repository structure:
+/analysis/          — Weekly and prospect-specific HTML brief pages (public, deployed via Pages)
+/analysis/prospects/ — Prospect-specific pages, organized in subfolders by firm slug
+/data/backups/      — Weekly CSV data backups (private subdirectory, excluded from Pages)
+/.github/workflows/ — GitHub Actions deployment workflows (do not modify unless instructed)
+
+Commit conventions: Every commit message must follow this format: "[Action] [content type] [date] — [one-line description]". Examples: "Add weekly brief 2026-05-09 — SOFR +8bps, CP spreads widen", "Weekly backup 2026-05-09 — 247 contacts, 31 active, 12 outreach sent". Never commit with a vague message like "update" or "changes."
+
+Privacy rules before any push:
+— Never commit a file containing email addresses, phone numbers, or physical addresses to any public repository.
+— Never commit draft email content, call notes, or relationship commentary to any repository (public or private).
+— Never commit files containing counterparty positions, portfolio holdings, or non-public financial data.
+— For CSV exports destined for GitHub: redact the Email Address column (replace values with blank), the Draft Body column in outreach files, and any Notes column containing relationship-specific commentary.
+— HTML analysis pages may contain publicly available market data, publicly available firm financial data (cash balances from public filings, public credit ratings), and your market commentary. They must not contain client-specific advice, portfolio recommendations, or non-public information.
+
+Pages deployment: After pushing any file to /analysis/, wait 45 seconds and confirm the deployed URL is accessible before returning it. If the page returns a 404, wait an additional 30 seconds and retry once. If it remains inaccessible, report the issue rather than returning a broken URL.
+
+Authentication: Use the GitHub credentials stored in project context. Never log, print, or include the Personal Access Token in any output, commit message, file content, or response visible to a third party.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <h3>How This Changes Your Prospect Outreach</h3>
+
+  <p>The practical effect of combining Cowork, weekly analysis pages, and GitHub Pages is that your outreach emails shift from generic introductions to delivery vehicles for specific, timely research. An email that says "I wanted to introduce myself and discuss your cash investment needs" competes with every other coverage email in your prospect's inbox. An email that says "I published this week's rate brief with a note on [their firm]'s CP issuance position in the current spread environment — link below" does not have many competitors.</p>
+
+  <p>The setup cost is a one-time 20-minute configuration. The ongoing cost is the time Claude spends generating and publishing the analysis — roughly 15–20 minutes of automated work every Friday afternoon, producing an asset that serves every active coverage relationship simultaneously. Each prospect who receives a link to their own firm-specific page gets something that took Claude 20 minutes to produce but reads as if you spent an afternoon on it.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-title">The Index Page</div>
+    <p>Once you have published several weekly briefs, consider asking Claude to generate an index page — a clean landing page at the root of your GitHub Pages site that lists all published briefs in reverse chronological order, with a one-line headline for each. This gives prospects who revisit the URL a library of your prior analysis rather than a single dated page. Claude can regenerate this index automatically as part of the weekly publish routine: "After pushing the weekly brief, regenerate index.html at the repository root to include this week's brief in the list of published analysis pages."</p>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">On Compliance Review Before Publishing</div>
+    <p>Any analysis page that will be shared with prospects should go through your firm's standard marketing and communications review process before the URL is distributed — the same process that governs any client-facing written communication. The fact that it is a webpage rather than a document does not change its regulatory character. Claude can flag each HTML page for review before pushing by adding a step: "Before committing this file to GitHub, save a copy to Prospecting/Compliance Review/[filename] in Google Drive and send me a Gmail asking me to confirm compliance clearance before the file goes live." Claude will then wait for your confirmation before executing the push.</p>
+  </div>
+
+</div>
+
 // Transform all .prompt-block elements into terminal UI
 document.querySelectorAll('.prompt-block').forEach(function(block) {
   // Get the label text
