@@ -486,7 +486,338 @@
     margin: 0;
   }
 
-  /* ─── FOOTER ─── */
+  /* ─── MODE TOGGLE BUTTON ─── */
+  .toc-spacer { flex: 1; }
+  .mode-toggle {
+    display: flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--gold);
+    border: 1px solid rgba(200,168,75,0.4);
+    border-radius: 3px;
+    padding: 6px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mode-toggle:hover { background: #2a2820; color: #f0d070; }
+
+  /* ─── SLIDESHOW OVERLAY ─── */
+  #slideshowOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--ink);
+    z-index: 9999;
+    flex-direction: column;
+  }
+  #slideshowOverlay.active { display: flex; }
+
+  /* Slideshow top bar */
+  .ss-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 52px;
+    background: #0a0a09;
+    border-bottom: 1px solid rgba(200,168,75,0.15);
+    flex-shrink: 0;
+  }
+  .ss-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+  .ss-counter {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: rgba(245,242,236,0.4);
+    letter-spacing: 0.1em;
+  }
+  .ss-counter span { color: rgba(245,242,236,0.85); }
+  .ss-exit {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    color: rgba(245,242,236,0.5);
+    border: 1px solid rgba(245,242,236,0.15);
+    border-radius: 3px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .ss-exit:hover { color: var(--paper); border-color: rgba(245,242,236,0.4); }
+
+  /* Slide viewport */
+  .ss-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Individual slides */
+  .ss-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 64px;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+  }
+  .ss-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .ss-slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    pointer-events: none;
+  }
+  .ss-slide-inner {
+    width: 100%;
+    max-width: 860px;
+  }
+
+  /* Slide type: title card */
+  .ss-slide.type-title {
+    align-items: center;
+    background: var(--ink);
+  }
+  .ss-slide.type-title .ss-slide-inner { text-align: left; }
+  .ss-slide.type-title .ss-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .ss-slide.type-title .ss-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--gold);
+  }
+  .ss-slide.type-title h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    line-height: 1.06;
+    font-weight: 400;
+    color: var(--paper);
+    margin-bottom: 28px;
+  }
+  .ss-slide.type-title h1 em { color: var(--gold-light); font-style: italic; }
+  .ss-slide.type-title .ss-sub {
+    font-size: 16px;
+    color: rgba(245,242,236,0.6);
+    max-width: 520px;
+    line-height: 1.65;
+    margin-bottom: 40px;
+  }
+  .ss-slide.type-title .ss-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .ss-slide.type-title .ss-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    border: 1px solid rgba(200,168,75,0.3);
+    padding: 5px 12px;
+    border-radius: 2px;
+  }
+
+  /* Slide type: section */
+  .ss-slide.type-section { background: var(--paper); }
+  .ss-slide.type-section .ss-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .ss-slide.type-section .ss-section-label::before {
+    content: ''; display: inline-block;
+    width: 20px; height: 1px; background: var(--gold);
+  }
+  .ss-slide.type-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 28px;
+    line-height: 1.1;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .ss-slide.type-section .ss-body { font-size: 15px; line-height: 1.7; color: #2a2822; }
+  .ss-slide.type-section .ss-body p { margin-bottom: 14px; }
+  .ss-slide.type-section .ss-body p:last-child { margin-bottom: 0; }
+
+  /* Slide type: appendix divider */
+  .ss-slide.type-appendix {
+    align-items: center;
+    background: #0a0a09;
+  }
+  .ss-slide.type-appendix .ss-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0.8;
+  }
+  .ss-slide.type-appendix .ss-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 28px; height: 1px; background: var(--gold);
+  }
+  .ss-slide.type-appendix h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(34px, 4.5vw, 56px);
+    font-weight: 400;
+    color: var(--paper);
+    line-height: 1.08;
+    margin-bottom: 20px;
+  }
+  .ss-slide.type-appendix h2 em { font-style: italic; color: var(--gold-light); }
+  .ss-slide.type-appendix p {
+    font-size: 15px;
+    color: rgba(245,242,236,0.55);
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  /* Slide type: content (cards, tables, steps) */
+  .ss-slide.type-content { background: var(--paper); align-items: flex-start; }
+  .ss-slide.type-content .ss-content-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    display: block;
+  }
+
+  /* Slide progress bar */
+  .ss-progress {
+    height: 2px;
+    background: rgba(200,168,75,0.12);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .ss-progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.35s ease;
+  }
+
+  /* Navigation arrows */
+  .ss-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    background: #0a0a09;
+    border-top: 1px solid rgba(200,168,75,0.1);
+    flex-shrink: 0;
+  }
+  .ss-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    color: rgba(245,242,236,0.45);
+    border: 1px solid rgba(245,242,236,0.12);
+    border-radius: 3px;
+    padding: 8px 18px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .ss-nav-btn:hover:not(:disabled) { color: var(--paper); border-color: rgba(245,242,236,0.35); }
+  .ss-nav-btn:disabled { opacity: 0.2; cursor: default; }
+  .ss-nav-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(245,242,236,0.2);
+    letter-spacing: 0.08em;
+  }
+
+  /* Thumbnail strip */
+  .ss-thumbstrip {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 0 24px;
+    overflow: hidden;
+  }
+  .ss-thumb {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(245,242,236,0.18);
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .ss-thumb.active { background: var(--gold); transform: scale(1.4); }
+  .ss-thumb.near { background: rgba(245,242,236,0.35); }
+
+  /* Scrollbar styling inside slides */
+  .ss-slide::-webkit-scrollbar { width: 4px; }
+  .ss-slide::-webkit-scrollbar-track { background: transparent; }
+  .ss-slide::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.25); border-radius: 2px; }
+
+  /* Slide content inherits existing component styles */
+  .ss-slide .skill-card,
+  .ss-slide .routine-card,
+  .ss-slide .artifact-card,
+  .ss-slide .workflow-header,
+  .ss-slide .workflow-body,
+  .ss-slide .callout,
+  .ss-slide .prompt-block,
+  .ss-slide .pricing-table,
+  .ss-slide .stack-grid,
+  .ss-slide .steps,
+  .ss-slide .connector-row,
+  .ss-slide .first-task { max-width: 100%; }
+
+  /* Override some colors for dark-bg slides */
+  .ss-slide.type-appendix .callout-info { background: rgba(61,74,92,0.25); }
+  .ss-slide.type-appendix .callout-tip { background: rgba(200,168,75,0.1); }
+
+  @media (max-width: 640px) {
+    .ss-slide { padding: 28px 24px; }
+    .ss-topbar { padding: 0 16px; }
+    .ss-nav { padding: 12px 16px; }
+  }
   .footer {
     background: var(--cream);
     border-top: 1px solid var(--rule);
@@ -803,6 +1134,11 @@
   <a href="#appendix-routines">B · Routines</a>
   <a href="#appendix-artifacts">C · Artifacts</a>
   <a href="#appendix-github">D · GitHub</a>
+  <div class="toc-spacer"></div>
+  <button class="mode-toggle" id="modeToggle" onclick="enterSlideshow()">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px"><rect x="1" y="1" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 12h4M7 10v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    Slideshow
+  </button>
 </nav>
 
 <!-- BODY -->
@@ -2409,7 +2745,6 @@ document.addEventListener('click', function(e) {
       e.target.classList.remove('copied');
     }, 2000);
   }).catch(function() {
-    // Fallback for non-HTTPS
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
@@ -2426,6 +2761,306 @@ document.addEventListener('click', function(e) {
     }, 2000);
   });
 });
+
+// ─── SLIDESHOW ENGINE ──────────────────────────────────────────
+var SS = { slides: [], current: 0, built: false };
+
+function stripForSlide(html) {
+  // Prevent nested slideshow overlays and mode-toggle from appearing in slides
+  return html;
+}
+
+function buildSlides() {
+  if (SS.built) return;
+  SS.built = true;
+  var deck = [];
+
+  // ── Slide 0: Title ───────────────────────────────────────────
+  deck.push({
+    type: 'title',
+    html: '<div class="ss-eyebrow">Practitioner\'s Guide · May 2026</div>' +
+          '<h1>Claude Cowork for<br><em>Finance Prospecting</em></h1>' +
+          '<p class="ss-sub">A zero-to-functional field guide for the Corporate Cash Investment SVP. No code. No technical background required.</p>' +
+          '<div class="ss-pills">' +
+            '<span class="ss-pill">Claude Cowork GA</span>' +
+            '<span class="ss-pill">Feb 2026 Plugin Expansion</span>' +
+            '<span class="ss-pill">May 2026 Finance Agents</span>' +
+            '<span class="ss-pill">4 Appendices · 7 Skills · 14 Routines · 8 Artifacts</span>' +
+          '</div>'
+  });
+
+  // ── Main body sections ───────────────────────────────────────
+  document.querySelectorAll('.body-wrap > section').forEach(function(sec) {
+    var ph = sec.querySelector('.part-header');
+    if (!ph) return;
+    var labelEl = ph.querySelector('.part-label');
+    var h2El = ph.querySelector('h2');
+    var label = labelEl ? labelEl.textContent.trim() : '';
+    var h2 = h2El ? h2El.textContent.trim() : '';
+
+    // Section overview slide (prose + tables + callouts, no cards)
+    var bodyParts = [];
+    Array.from(sec.children).forEach(function(child) {
+      if (child === ph) return;
+      if (child.classList.contains('skill-card') ||
+          child.classList.contains('routine-card') ||
+          child.classList.contains('artifact-card') ||
+          child.id && child.id.startsWith('workflow-')) return;
+      if (child.classList.contains('steps') ||
+          child.tagName === 'P' ||
+          child.tagName === 'H3' ||
+          child.classList.contains('callout') ||
+          child.classList.contains('prompt-block') ||
+          child.classList.contains('pricing-table') ||
+          child.classList.contains('stack-grid') ||
+          child.classList.contains('connector-row') ||
+          child.classList.contains('first-task') ||
+          child.tagName === 'TABLE') {
+        bodyParts.push(child.outerHTML);
+      }
+    });
+    if (h2) {
+      deck.push({ type: 'section', label: label, h2: h2, body: bodyParts.join('') });
+    }
+
+    // Per-workflow sub-slides
+    sec.querySelectorAll('[id^="workflow-"]').forEach(function(wf) {
+      var wfTitle = wf.querySelector('h3') ? wf.querySelector('h3').textContent.trim() : '';
+      var wfNum = wf.querySelector('.workflow-num') ? wf.querySelector('.workflow-num').textContent.trim() : '';
+      deck.push({ type: 'content', label: wfNum + ' — ' + wfTitle, html: wf.outerHTML });
+    });
+  });
+
+  // ── Appendix sections ────────────────────────────────────────
+  document.querySelectorAll('.appendix-divider').forEach(function(divider) {
+    var eyebrowEl = divider.querySelector('.appendix-divider-eyebrow');
+    var h2El = divider.querySelector('h2');
+    var pEl = divider.querySelector('p');
+    var eyebrow = eyebrowEl ? eyebrowEl.textContent.trim() : '';
+    var h2html = h2El ? h2El.innerHTML : '';
+    var pdesc = pEl ? pEl.textContent.trim() : '';
+
+    // Appendix title card
+    deck.push({
+      type: 'appendix',
+      html: '<div class="ss-eyebrow">' + eyebrow + '</div><h2>' + h2html + '</h2><p>' + pdesc + '</p>'
+    });
+
+    var body = divider.nextElementSibling;
+    if (!body || !body.classList.contains('appendix-body')) return;
+
+    // Intro text slide
+    var introHtml = '';
+    Array.from(body.children).forEach(function(child) {
+      if (child.tagName === 'P') introHtml += child.outerHTML;
+    });
+    if (introHtml) {
+      deck.push({ type: 'section', label: eyebrow, h2: '', body: introHtml });
+    }
+
+    // H3 sub-topic slides (prose blocks between cards)
+    body.querySelectorAll('h3').forEach(function(h3) {
+      // skip h3s inside cards
+      if (h3.closest('.skill-card, .routine-card, .artifact-card')) return;
+      var parts = [h3.outerHTML];
+      var sib = h3.nextElementSibling;
+      var limit = 10;
+      while (sib && limit-- > 0 && sib.tagName !== 'H3' && sib.tagName !== 'HR') {
+        if (!sib.classList.contains('skill-card') &&
+            !sib.classList.contains('routine-card') &&
+            !sib.classList.contains('artifact-card')) {
+          parts.push(sib.outerHTML);
+        }
+        sib = sib.nextElementSibling;
+      }
+      if (parts.length > 1) {
+        deck.push({ type: 'section', label: eyebrow, h2: '', body: parts.join('') });
+      }
+    });
+
+    // Skill, routine, artifact cards — one per slide
+    body.querySelectorAll('.skill-card').forEach(function(card) {
+      var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+      var badge = card.querySelector('.skill-badge') ? card.querySelector('.skill-badge').textContent.trim() : '';
+      deck.push({ type: 'content', label: badge + ' · ' + title, html: card.outerHTML });
+    });
+    body.querySelectorAll('.routine-card').forEach(function(card) {
+      var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+      var idx = card.querySelector('.routine-index') ? card.querySelector('.routine-index').textContent.trim() : '';
+      deck.push({ type: 'content', label: idx + ' — ' + title, html: card.outerHTML });
+    });
+    body.querySelectorAll('.artifact-card').forEach(function(card) {
+      var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+      deck.push({ type: 'content', label: title, html: card.outerHTML });
+    });
+  });
+
+  // ── Final slide ───────────────────────────────────────────────
+  deck.push({
+    type: 'title',
+    html: '<div class="ss-eyebrow">Quick Reference</div>' +
+          '<h1>Your <em>First Task</em><br>to Run Today</h1>' +
+          '<p class="ss-sub">With setup complete, run this inside your Finance Prospecting project with the Sales plugin and Apollo connector active.</p>' +
+          '<div class="first-task" style="margin-top:32px">' +
+            '<div class="ft-label">→ Paste This Into Cowork</div>' +
+            '<p>Find 20 corporate treasury contacts at US investment-grade companies in the technology or healthcare sector with cash balances above $500M. For each, include name, title, company, estimated cash balance, and whether Apollo has a verified email. Export to a Google Sheet in my Prospecting folder called "May 2026 Initial Coverage List."</p>' +
+          '</div>'
+  });
+
+  SS.slides = deck;
+
+  // ── Render into DOM ──────────────────────────────────────────
+  var viewport = document.getElementById('ssViewport');
+  viewport.innerHTML = '';
+
+  deck.forEach(function(slide, i) {
+    var el = document.createElement('div');
+    el.className = 'ss-slide type-' + slide.type;
+    el.dataset.index = i;
+    var inner = document.createElement('div');
+    inner.className = 'ss-slide-inner';
+
+    if (slide.type === 'title' || slide.type === 'appendix') {
+      inner.innerHTML = slide.html;
+    } else if (slide.type === 'section') {
+      inner.innerHTML =
+        (slide.label ? '<span class="ss-section-label">' + slide.label + '</span>' : '') +
+        (slide.h2 ? '<h2>' + slide.h2 + '</h2>' : '') +
+        '<div class="ss-body">' + (slide.body || '') + '</div>';
+    } else {
+      inner.innerHTML =
+        (slide.label ? '<span class="ss-content-label">' + slide.label + '</span>' : '') +
+        (slide.html || '');
+    }
+
+    el.appendChild(inner);
+    viewport.appendChild(el);
+  });
+
+  // Build thumb dots
+  var strip = document.getElementById('ssThumbStrip');
+  strip.innerHTML = '';
+  deck.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.className = 'ss-thumb';
+    dot.dataset.index = i;
+    dot.addEventListener('click', function() { goToSlide(parseInt(this.dataset.index)); });
+    strip.appendChild(dot);
+  });
+
+  document.getElementById('ssTotalNum').textContent = deck.length;
+}
+
+function goToSlide(n) {
+  var total = SS.slides.length;
+  if (n < 0 || n >= total) return;
+  var viewport = document.getElementById('ssViewport');
+  var slides = Array.from(viewport.querySelectorAll('.ss-slide'));
+  var prev = SS.current;
+  var goingForward = n > prev;
+
+  // Exit prev slide
+  slides[prev].classList.remove('active');
+  if (goingForward) {
+    slides[prev].classList.add('exit-left');
+  } else {
+    slides[prev].style.transform = 'translateX(60px)';
+    slides[prev].style.opacity = '0';
+  }
+
+  // Clean up after transition
+  var oldSlide = slides[prev];
+  setTimeout(function() {
+    oldSlide.classList.remove('exit-left');
+    oldSlide.style.transform = '';
+    oldSlide.style.opacity = '';
+  }, 400);
+
+  SS.current = n;
+  slides[n].scrollTop = 0;
+
+  // Incoming slide — start from the right if going forward, from left if going back
+  if (!goingForward) {
+    slides[n].style.transform = 'translateX(-60px)';
+    slides[n].style.opacity = '0';
+    slides[n].style.transition = 'none';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        slides[n].style.transition = '';
+        slides[n].classList.add('active');
+        slides[n].style.transform = '';
+        slides[n].style.opacity = '';
+      });
+    });
+  } else {
+    slides[n].classList.add('active');
+  }
+
+  updateSlideshow();
+}
+
+function slideshowNav(dir) { goToSlide(SS.current + dir); }
+
+function updateSlideshow() {
+  var total = SS.slides.length;
+  var cur = SS.current;
+  document.getElementById('ssCurrentNum').textContent = cur + 1;
+  document.getElementById('ssProgressFill').style.width = ((cur + 1) / total * 100) + '%';
+  document.getElementById('ssPrevBtn').disabled = cur === 0;
+  document.getElementById('ssNextBtn').disabled = cur === total - 1;
+  document.querySelectorAll('.ss-thumb').forEach(function(dot, i) {
+    dot.classList.toggle('active', i === cur);
+    dot.classList.toggle('near', Math.abs(i - cur) === 1);
+  });
+}
+
+function enterSlideshow() {
+  buildSlides();
+  var overlay = document.getElementById('slideshowOverlay');
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  // Activate first slide
+  var slides = document.querySelectorAll('.ss-slide');
+  slides.forEach(function(s) { s.classList.remove('active', 'exit-left'); s.style.transform = ''; s.style.opacity = ''; });
+  if (slides[SS.current]) slides[SS.current].classList.add('active');
+  updateSlideshow();
+}
+
+function exitSlideshow() {
+  document.getElementById('slideshowOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('slideshowOverlay').classList.contains('active')) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); slideshowNav(1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); slideshowNav(-1); }
+  else if (e.key === 'Escape') { exitSlideshow(); }
+});
 </script>
+
+<!-- ═══ SLIDESHOW OVERLAY ═══ -->
+<div id="slideshowOverlay">
+  <div class="ss-topbar">
+    <span class="ss-logo">Claude Cowork · Finance Guide</span>
+    <span class="ss-counter"><span id="ssCurrentNum">1</span> / <span id="ssTotalNum">—</span></span>
+    <button class="ss-exit" onclick="exitSlideshow()">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:5px;vertical-align:middle"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Exit
+    </button>
+  </div>
+  <div class="ss-progress"><div class="ss-progress-fill" id="ssProgressFill" style="width:0%"></div></div>
+  <div class="ss-viewport" id="ssViewport"></div>
+  <div class="ss-nav">
+    <button class="ss-nav-btn" id="ssPrevBtn" onclick="slideshowNav(-1)" disabled>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev
+    </button>
+    <div class="ss-thumbstrip" id="ssThumbStrip"></div>
+    <span class="ss-nav-hint">← → keys · Esc to exit</span>
+    <button class="ss-nav-btn" id="ssNextBtn" onclick="slideshowNav(1)">
+      Next<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-left:6px"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
 </body>
 </html>

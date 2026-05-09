@@ -10,6 +10,10 @@ Built on Claude Cowork GA, the February 2026 plugin expansion, and the May 2026 
 
 **[View the guide →](https://shertokj.github.io/corwork_finance_guide/)**
 
+The guide supports two viewing modes:
+- **Website mode** — full scrollable document with sticky navigation
+- **Slideshow mode** — click the "Slideshow" button in the nav bar to enter a full-screen presentation with keyboard navigation (← → arrow keys, Esc to exit). Every section, workflow, skill card, routine, and artifact becomes its own slide automatically.
+
 ---
 
 ## What's Inside
@@ -72,7 +76,7 @@ Fourteen named routines covering the full operating cycle:
 
 ### Appendix C — Live Artifacts
 
-Eight persistent, data-connected files that form the operational infrastructure:
+Eight persistent, data-connected files forming the operational infrastructure:
 
 | Artifact | Type | Purpose |
 |---|---|---|
@@ -91,9 +95,9 @@ Eight persistent, data-connected files that form the operational infrastructure:
 
 How to connect Cowork to GitHub for two distinct purposes:
 
-**Publishing analysis as live websites.** Every Friday, Claude generates a polished HTML market brief and publishes it to GitHub Pages as a live URL. Prospects receive a link to a professional webpage — not a PDF attachment. A prospect-specific variant generates a page referencing their firm's cash position and a specific market hook, used before high-priority outreach.
+**Publishing analysis as live websites.** Every Friday, Claude generates a polished HTML market brief and publishes it to GitHub Pages as a live URL. Prospects receive a link to a professional webpage, not a PDF. A prospect-specific variant generates a page referencing their firm's cash position and a specific market hook, used before high-priority outreach.
 
-**Version-controlled prospect data backup.** Each Friday, Claude exports the master coverage sheet, outreach queue, and credit monitor log to a private GitHub repository as timestamped CSVs. Full version history enables point-in-time recovery of any data state. A restore routine retrieves any prior snapshot to a new Drive sheet for comparison without touching the live data.
+**Version-controlled prospect data backup.** Each Friday, Claude exports the master coverage sheet, outreach queue, and credit monitor log to a private GitHub repository as timestamped CSVs with pipeline summaries in the commit message. A restore routine retrieves any prior snapshot to a new Drive sheet for comparison.
 
 Includes:
 - Step-by-step setup (GitHub repo, PAT, Cowork project configuration, Pages enablement)
@@ -103,6 +107,17 @@ Includes:
 - Restore from Backup routine (with prompt)
 - Skill 08 — GitHub Integration (with creation prompt)
 - Compliance review gate before any public publish
+
+---
+
+## Viewing Modes
+
+| Mode | How to Enter | Navigation |
+|---|---|---|
+| Website | Default on load | Scroll, click nav links |
+| Slideshow | Click "Slideshow" button in nav | ← → arrow keys, click dots, Prev/Next buttons, Esc to exit |
+
+In slideshow mode, every section overview, workflow, skill card, routine card, and artifact card becomes its own slide. The deck is built dynamically from the document, so any update to the guide automatically appears in both modes.
 
 ---
 
