@@ -2609,7 +2609,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
 
   <h3>Why GitHub for a Finance Prospecting Practice</h3>
 
-  <p>Most practitioners in your role manage analysis outputs and contact data through a combination of email attachments, shared Drive folders, and CRM exports. The problem with that architecture is distribution friction. Sending a prospect a PDF of your weekly market analysis means they receive a file, file it somewhere, and read it once if at all. Sending them a URL to a clean, well-designed webpage that updates every week, carries your name in the domain, and renders perfectly on any device — is a qualitatively different thing. It positions you as a firm that produces institutional-quality research rather than someone who sends attachments.</p>
+  <p>Most practitioners in your role manage analysis outputs and contact data through a combination of email attachments, shared Drive folders, and CRM exports. The problem with that architecture is distribution friction. Sending a prospect a PDF of your weekly market analysis means they receive a file, file it somewhere, and read it once if at all. Sending them a URL to a clean, well-designed webpage that updates every week, carries your name in the domain, and renders perfectly on any device. It is a qualitatively different thing. It positions you as a firm that produces institutional-quality research rather than someone who sends attachments.</p>
 
   <p>GitHub Pages makes this possible at no cost. Every repository on GitHub can have an associated Pages site at a URL in the format <code>username.github.io/repository-name</code>. Claude can publish to that URL automatically as part of any routine that produces an HTML output. The prospect receives a link, not a file. The link is always current.</p>
 
@@ -2629,7 +2629,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
     </div>
     <div class="skill-card-body">
       <p>Go to <code>github.com</code> and sign in. Click the <strong>+</strong> icon in the top right and select <strong>New repository</strong>. Name it something like <code>cash-investment-research</code>. Set it to <strong>Public</strong> (required for free GitHub Pages hosting) or <strong>Private</strong> if your firm's compliance policy requires it; note that private repos require a paid GitHub plan for Pages. Leave all other settings at their defaults and click <strong>Create repository</strong>.</p>
-      <p>You now have an empty repository. You will not need to interact with it manually again after this setup — Claude will handle all future file operations.</p>
+      <p>You now have an empty repository. You will not need to interact with it manually again after this setup; Claude will handle all future file operations.</p>
     </div>
   </div>
 
@@ -2641,7 +2641,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
     </div>
     <div class="skill-card-body">
       <p>The PAT is a credential that allows Claude to push files to your repository on your behalf. It is the only credential you will ever need to handle manually for this workflow.</p>
-      <p>In GitHub, go to <strong>Settings</strong> (your profile, top right) → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong> → <strong>Generate new token (classic)</strong>. Give it a name like "Claude Cowork Integration." Set expiration to <strong>No expiration</strong> or a date far in the future. Under <strong>Select scopes</strong>, check only <strong>repo</strong> (this grants full repository read/write). Click <strong>Generate token</strong> and copy the value immediately — it is shown only once.</p>
+      <p>In GitHub, go to <strong>Settings</strong> (your profile, top right) → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong> → <strong>Generate new token (classic)</strong>. Give it a name like "Claude Cowork Integration." Set expiration to <strong>No expiration</strong> or a date far in the future. Under <strong>Select scopes</strong>, check only <strong>repo</strong> (this grants full repository read/write). Click <strong>Generate token</strong> and copy the value immediately; it is shown only once.</p>
       <div class="callout callout-warn">
         <div class="callout-title">Security Note</div>
         <p>Treat this token like a password. Do not paste it into emails, shared documents, or chat interfaces other than directly into your Cowork project context as described in Step 3. If it is ever compromised, revoke it immediately from the same GitHub settings page and generate a new one.</p>
@@ -2700,13 +2700,13 @@ Report back the live URL when complete.</p>
 
   <h3>Part 2 — Use Case One: Publishing Weekly Analysis as a Live Website</h3>
 
-  <p>The core idea is this: instead of sending a prospect a PDF or an email with inline market commentary, you send them a URL. That URL hosts a clean, well-designed webpage with your analysis, your name, and your firm's positioning — formatted to the same standard as this guide. It is always current, always accessible, and carries a level of production quality that a PDF attachment does not.</p>
+  <p>The core idea is this: instead of sending a prospect a PDF or an email with inline market commentary, you send them a URL. That URL hosts a clean, well-designed webpage with your analysis, your name, and your firm's positioning, formatted to the same standard as this guide. It is always current, always accessible, and carries a level of production quality that a PDF attachment does not.</p>
 
-  <p>The workflow requires no manual steps after setup. Claude generates the HTML, pushes it to GitHub, and the page goes live. The prospect receives a link in your outreach email. When you update the analysis next week, the same URL reflects the new content automatically — or you publish a new dated URL and send an update. Both approaches have merit depending on your relationship with the recipient.</p>
+  <p>The workflow requires no manual steps after setup. Claude generates the HTML, pushes it to GitHub, and the page goes live. The prospect receives a link in your outreach email. When you update the analysis next week, the same URL reflects the new content automatically; or you publish a new dated URL and send an update. Both approaches have merit depending on your relationship with the recipient.</p>
 
   <h3>What a Prospect-Facing Analysis Page Should Contain</h3>
 
-  <p>The most effective format for a cash investment audience is a one-page market brief with three sections: the current rate environment (SOFR, T-bill yields, CP spreads, MMF yields — the same data from the Morning Market Open routine), a short-duration portfolio perspective (what the rate environment implies for cash investors with a 0–12 month horizon), and a section specific to the prospect's situation (their firm's cash balance, any relevant credit or earnings development, a tailored observation connecting market conditions to their specific position). The third section is what makes it worth sending. Generic market commentary is available everywhere. A page that references their firm's Q1 earnings and connects that to a specific rate move is not.</p>
+  <p>The most effective format for a cash investment audience is a one-page market brief with three sections: the current rate environment (SOFR, T-bill yields, CP spreads, MMF yields, the same data from the Morning Market Open routine), a short-duration portfolio perspective (what the rate environment implies for cash investors with a 0–12 month horizon), and a section specific to the prospect's situation (their firm's cash balance, any relevant credit or earnings development, a tailored observation connecting market conditions to their specific position). The third section is what makes it worth sending. Generic market commentary is available everywhere. A page that references their firm's Q1 earnings and connects that to a specific rate move is not.</p>
 
   <!-- ROUTINE CARD -->
   <div class="routine-card">
@@ -2754,7 +2754,7 @@ Save the URL to a running log in my Google Drive at Prospecting/Research/weekly-
         <span class="trigger-tag">Market Rate Digest skill</span>
         <span class="trigger-tag">FactSet · GitHub</span>
       </div>
-      <p>A targeted variant that generates a page customized to a specific prospect — referencing their firm's cash position, recent news, and a specific market development relevant to their situation. Used before high-priority first-touch or re-engagement outreach where a generic brief would be insufficient.</p>
+      <p>A targeted variant that generates a page customized to a specific prospect, referencing their firm's cash position, recent news, and a specific market development relevant to their situation. Used before high-priority first-touch or re-engagement outreach where a generic brief would be insufficient.</p>
       <div class="prompt-block">
         <div class="prompt-label">→ Prospect-Specific Page Prompt</div>
         <p>Generate and publish a prospect-specific analysis page for [Contact Name] at [Firm].
@@ -2774,7 +2774,7 @@ Step 5 — Draft the outreach email. Using the Outreach Voice skill, draft a fou
 
   <div class="callout callout-tip">
     <div class="callout-title">On Public vs Private Pages</div>
-    <p>Analysis pages published to GitHub Pages are publicly accessible — anyone with the URL can read them, but the URL is not indexed or discoverable unless you share it. This is effectively security-by-obscurity, which is appropriate for market commentary but not for anything containing client-specific data, portfolio positions, or non-public information. The page should contain only market observations and publicly available firm data. Anything proprietary stays in Drive.</p>
+    <p>Analysis pages published to GitHub Pages are publicly accessible: anyone with the URL can read them, but the URL is not indexed or discoverable unless you share it. This is effectively security-by-obscurity, appropriate for market commentary but not for anything containing client-specific data, portfolio positions, or non-public information. The page should contain only market observations and publicly available firm data. Anything proprietary stays in Drive.</p>
   </div>
 
   <hr class="rule">
@@ -2899,7 +2899,7 @@ Authentication: Use the GitHub credentials stored in project context. Never log,
 
   <p>The practical effect of combining Cowork, weekly analysis pages, and GitHub Pages is that your outreach emails shift from generic introductions to delivery vehicles for specific, timely research. An email that says "I wanted to introduce myself and discuss your cash investment needs" competes with every other coverage email in your prospect's inbox. An email that says "I published this week's rate brief with a note on [their firm]'s CP issuance position in the current spread environment — link below" does not have many competitors.</p>
 
-  <p>The setup cost is a one-time 20-minute configuration. The ongoing cost is the time Claude spends generating and publishing the analysis — roughly 15–20 minutes of automated work every Friday afternoon, producing an asset that serves every active coverage relationship simultaneously. Each prospect who receives a link to their own firm-specific page gets something that took Claude 20 minutes to produce but reads as if you spent an afternoon on it.</p>
+  <p>The setup cost is a one-time 20-minute configuration. The ongoing cost is the time Claude spends generating and publishing the analysis: roughly 15–20 minutes of automated work every Friday afternoon, producing an asset that serves every active coverage relationship simultaneously. Each prospect who receives a link to their own firm-specific page gets something that took Claude 20 minutes to produce but reads as if you spent an afternoon on it.</p>
 
   <div class="callout callout-info">
     <div class="callout-title">The Index Page</div>
@@ -3399,47 +3399,8 @@ function updateSlideshow() {
   });
 }
 
-function enterSlideshow() {
-  buildSlides();
-  var overlay = document.getElementById('slideshowOverlay');
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  var slides = document.querySelectorAll('.ss-slide');
-  slides.forEach(function(s) { s.classList.remove('active','exit-left'); s.style.transform=''; s.style.opacity=''; });
-  if (slides[SS.current]) slides[SS.current].classList.add('active');
-  updateSlideshow();
-}
 
-function exitSlideshow() {
-  document.getElementById('slideshowOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-}
 
-document.addEventListener('keydown', function(e) {
-  if (!document.getElementById('slideshowOverlay').classList.contains('active')) return;
-  if (e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ') { e.preventDefault(); slideshowNav(1); }
-  else if (e.key==='ArrowLeft'||e.key==='ArrowUp') { e.preventDefault(); slideshowNav(-1); }
-  else if (e.key==='Escape') { exitSlideshow(); }
-});
-
-function buildSlides() {
-  if (SS.built) return;
-  SS.built = true;
-  var deck = [];
-
-  // ── Slide 0: Title ───────────────────────────────────────────
-  deck.push({
-    type: 'title',
-    html: '<div class="ss-eyebrow">Practitioner\'s Guide · May 2026</div>' +
-          '<h1>Claude Cowork for<br><em>Finance Prospecting</em></h1>' +
-          '<p class="ss-sub">A zero-to-functional field guide for the Corporate Cash Investment SVP. No code. No technical background required.</p>' +
-          '<div class="ss-pills">' +
-            '<span class="ss-pill">Claude Cowork GA</span>' +
-            '<span class="ss-pill">Feb 2026 Plugin Expansion</span>' +
-            '<span class="ss-pill">May 2026 Finance Agents</span>' +
-            '<span class="ss-pill">4 Appendices · 7 Skills · 14 Routines · 8 Artifacts</span>' +
-          '</div>'
-  });
 
   // ── Main body sections ───────────────────────────────────────
   document.querySelectorAll('.body-wrap > section').forEach(function(sec) {
@@ -3602,47 +3563,6 @@ function buildSlides() {
 
   document.getElementById('ssTotalNum').textContent = deck.length;
 }
-
-function goToSlide(n) {
-  var total = SS.slides.length;
-  if (n < 0 || n >= total) return;
-  var viewport = document.getElementById('ssViewport');
-  var slides = Array.from(viewport.querySelectorAll('.ss-slide'));
-  var prev = SS.current;
-  var goingForward = n > prev;
-
-  // Exit prev slide
-  slides[prev].classList.remove('active');
-  if (goingForward) {
-    slides[prev].classList.add('exit-left');
-  } else {
-    slides[prev].style.transform = 'translateX(60px)';
-    slides[prev].style.opacity = '0';
-  }
-
-  // Clean up after transition
-  var oldSlide = slides[prev];
-  setTimeout(function() {
-    oldSlide.classList.remove('exit-left');
-    oldSlide.style.transform = '';
-    oldSlide.style.opacity = '';
-  }, 400);
-
-  SS.current = n;
-  slides[n].scrollTop = 0;
-
-  // Incoming slide — start from the right if going forward, from left if going back
-  if (!goingForward) {
-    slides[n].style.transform = 'translateX(-60px)';
-    slides[n].style.opacity = '0';
-    slides[n].style.transition = 'none';
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        slides[n].style.transition = '';
-        slides[n].classList.add('active');
-        slides[n].style.transform = '';
-        slides[n].style.opacity = '';
-      });
     });
   } else {
     slides[n].classList.add('active');
@@ -3650,20 +3570,6 @@ function goToSlide(n) {
 
   updateSlideshow();
 }
-
-function slideshowNav(dir) { goToSlide(SS.current + dir); }
-
-function updateSlideshow() {
-  var total = SS.slides.length;
-  var cur = SS.current;
-  document.getElementById('ssCurrentNum').textContent = cur + 1;
-  document.getElementById('ssProgressFill').style.width = ((cur + 1) / total * 100) + '%';
-  document.getElementById('ssPrevBtn').disabled = cur === 0;
-  document.getElementById('ssNextBtn').disabled = cur === total - 1;
-  document.querySelectorAll('.ss-thumb').forEach(function(dot, i) {
-    dot.classList.toggle('active', i === cur);
-    dot.classList.toggle('near', Math.abs(i - cur) === 1);
-  });
 }
 
 function enterSlideshow() {
