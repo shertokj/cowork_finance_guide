@@ -20,7 +20,7 @@ The guide supports two viewing modes:
 
 This guide's slideshow mode was built and validated using the **slideshow-builder** Claude skill included in this repository.
 
-**[Download slideshow-builder.skill →](https://github.com/shertokj/corwork_finance_guide/raw/main/skills/slideshow-builder.skill)**
+**[Download slideshow-builder.skill →](https://github.com/shertokj/cowork_finance_guide/raw/main/skills/slideshow-builder.skill)**
 
 ### What it does
 
