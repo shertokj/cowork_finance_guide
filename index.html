@@ -751,7 +751,7 @@
     line-height: 1.65;
   }
 
-  /* Slide type: content (cards, tables, steps) */
+  /* Slide type: content (card context — header + meta + rationale only, no prompt) */
   .ss-slide.type-content { background: var(--paper); align-items: flex-start; }
   .ss-slide.type-content .ss-content-label {
     font-family: 'DM Mono', monospace;
@@ -764,6 +764,149 @@
     border-bottom: 1px solid var(--rule);
     display: block;
   }
+  /* Compact card header used in content slides */
+  .ss-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .ss-card-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--gold);
+    padding: 5px 12px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .ss-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .ss-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 24px 0 28px;
+  }
+  .ss-meta-cell {
+    background: var(--paper);
+    padding: 14px 18px;
+  }
+  .ss-meta-cell strong {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 5px;
+  }
+  .ss-meta-cell span {
+    font-size: 13px;
+    color: var(--slate);
+  }
+  .ss-rationale {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #2a2822;
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+  }
+  .ss-connector-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  /* Slide type: prompt (full-screen dark terminal) */
+  .ss-slide.type-prompt {
+    background: #0d0d0b;
+    align-items: flex-start;
+    padding: 40px 56px;
+  }
+  .ss-slide.type-prompt .ss-prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(200,168,75,0.15);
+  }
+  .ss-slide.type-prompt .ss-prompt-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(200,168,75,0.3);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+  .ss-slide.type-prompt .ss-prompt-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(245,242,236,0.75);
+  }
+  .ss-slide.type-prompt .ss-prompt-copy {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(200,168,75,0.12);
+    color: var(--gold);
+    border: 1px solid rgba(200,168,75,0.3);
+    border-radius: 3px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .ss-slide.type-prompt .ss-prompt-copy:hover { background: rgba(200,168,75,0.22); }
+  .ss-slide.type-prompt .ss-prompt-copy.copied { background: rgba(40,200,64,0.12); color: #28c840; border-color: rgba(40,200,64,0.3); }
+  .ss-slide.type-prompt .ss-prompt-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: #f0ece4;
+    white-space: pre-wrap;
+    display: block;
+  }
+
+  /* Workflow slides */
+  .ss-wf-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    background: var(--ink);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 18px;
+    display: inline-block;
+  }
+  .ss-wf-replaces {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: var(--cream);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ss-wf-replaces::before { content: '↩'; color: var(--gold); }
 
   /* Slide progress bar */
   .ss-progress {
@@ -1198,7 +1341,7 @@
     <p>The goal is a working prospecting workflow: one that researches institutions, surfaces contacts, drafts outreach, and maintains a running contact log without you coordinating every step. No code is written, no technical configuration is required, and no platform terms are violated. Every tool referenced here is either a native Anthropic product or a verified connector from the February or May 2026 launches.</p>
 
     <h3>The Eight Layers</h3>
-    <p>Claude Cowork is not a conversational interface. It is an autonomous agent inside the Claude Desktop app that takes multi-step action on your behalf: reading files, navigating your browser, writing documents, querying connected data services, and publishing outputs to GitHub Pages. The distinction from standard chat is structural — you describe an outcome and Claude executes the steps required to reach it, surfacing reasoning as it goes and asking for course corrections only when genuinely needed.</p>
+    <p>Claude Cowork is not a conversational interface. It is an autonomous agent inside the Claude Desktop app that takes multi-step action on your behalf: reading files, navigating your browser, writing documents, querying connected data services, and publishing outputs to GitHub Pages. The distinction from standard chat is structural: you describe an outcome and Claude executes the steps required to reach it, surfacing reasoning as it goes and asking for course corrections only when genuinely needed.</p>
     <p>A fully configured setup for a cash investment SVP stacks eight layers. This guide covers setup and operation of all of them.</p>
 
     <div class="stack-grid">
@@ -1212,7 +1355,7 @@
         <div class="stack-card-icon">🔌</div>
         <div class="stack-card-label">Pre-Packaged Domain Sets</div>
         <div class="stack-card-title">Plugins</div>
-        <p>Financial Analysis, Sales, Market Researcher — each bundles skills, connectors, and slash commands.</p>
+        <p>Financial Analysis, Sales, Market Researcher: each bundles skills, connectors, and slash commands. skills, connectors, and slash commands.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">⚡</div>
@@ -1224,7 +1367,7 @@
         <div class="stack-card-icon">🌐</div>
         <div class="stack-card-label">Browser Automation</div>
         <div class="stack-card-title">Claude in Chrome</div>
-        <p>When no connector exists, Claude navigates your browser directly — IR pages, filings, conference directories.</p>
+        <p>When no connector exists, Claude navigates your browser directly: IR pages, filings, conference directories.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">🧠</div>
@@ -1236,13 +1379,13 @@
         <div class="stack-card-icon">🔁</div>
         <div class="stack-card-label">Operating Cadence</div>
         <div class="stack-card-title">Routines</div>
-        <p>14 named routines — daily digests, weekly refreshes, monthly sweeps, quarterly reviews. See Appendix B.</p>
+        <p>14 named routines covering daily digests, weekly refreshes, monthly sweeps, quarterly reviews. See Appendix B.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">📊</div>
         <div class="stack-card-label">Persistent Infrastructure</div>
         <div class="stack-card-title">Artifacts</div>
-        <p>8 live documents in Google Drive that routines write to continuously — coverage sheet, outreach queue, credit log. See Appendix C.</p>
+        <p>8 live documents in Google Drive that routines write to continuously: coverage sheet, outreach queue, credit log. See Appendix C.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">🐙</div>
@@ -1276,9 +1419,9 @@
         <div class="step-body">
           <strong>Install the Financial Services Plugins</strong>
           <p>Go to <strong>Settings → Customize → Plugins</strong>. Install two plugins to start:</p>
-          <p><strong>Financial Analysis</strong> — the core plugin. Sets up connector slots for FactSet, Morningstar, S&P Global, Moody's, LSEG, PitchBook, and others. Your starting point for all research tasks.</p>
-          <p><strong>Sales</strong> — handles contact research and CRM integration. Includes a <code>/call-prep</code> skill and integrations with Apollo, Clay, HubSpot, and Salesforce.</p>
-          <p>Claude walks you through setup via questions about your role. Answer accurately — your responses tune the skills to your context.</p>
+          <p><strong>Financial Analysis</strong>, the core plugin. Sets up connector slots for FactSet, Morningstar, S&P Global, Moody's, LSEG, PitchBook, and others. Your starting point for all research tasks.</p>
+          <p><strong>Sales</strong> handles contact research and CRM integration. Includes a <code>/call-prep</code> skill and integrations with Apollo, Clay, HubSpot, and Salesforce.</p>
+          <p>Claude walks you through setup via questions about your role. Answer accurately; your responses tune the skills to your context.</p>
         </div>
       </div>
 
@@ -1319,8 +1462,8 @@
         <div class="step-num"></div>
         <div class="step-body">
           <strong>Create a Cowork Project</strong>
-          <p>In the Cowork tab, create a <strong>New Project</strong>. Name it "Finance Prospecting — Cash Investments." Projects are persistent, self-contained workspaces with their own memory, files, and instructions. Everything accumulates over time.</p>
-          <p>Add this instruction set in the project context field — paste it in and adjust the specifics to match your actual mandate:</p>
+          <p>In the Cowork tab, create a <strong>New Project</strong>. Name it "Finance Prospecting: Cash Investments." Projects are persistent, self-contained workspaces with their own memory, files, and instructions. Everything accumulates over time.</p>
+          <p>Add this instruction set in the project context field; paste it in and adjust the specifics to match your actual mandate:</p>
         </div>
       </div>
     </div>
@@ -1331,7 +1474,7 @@
     </div>
 
     <div class="callout callout-tip">
-      <div class="callout-title">💡 Why This Matters</div>
+      <div class="callout-title">On Project Context</div>
       <p>This instruction set fires on every task inside this project, eliminating the need to re-establish role context at the start of each session. Cowork's project memory accumulates over time, recognizing patterns in your coverage universe and applying your preferred output formats without prompting.</p>
     </div>
   </section>
@@ -1360,7 +1503,7 @@
         <p>Claude queries your connected financial data sources for companies meeting the cash balance threshold, uses Apollo to find confirmed contacts by title keyword, uses Claude in Chrome to cross-reference conference speaker directories, and compiles the results into a formatted Google Drive spreadsheet.</p>
         <p>The task runs 10 to 30 minutes depending on list size and can proceed without your attention.</p>
         <div class="callout callout-info">
-          <div class="callout-title">📊 Realistic Output</div>
+          <div class="callout-title">Realistic Output</div>
           <p>50–200 verified contacts per run, with quality varying based on your data connector subscriptions. Apollo-sourced contacts typically run 80–90% email verification rates. FactSet / SPGI cash balance data is institutional grade.</p>
         </div>
       </div>
@@ -1393,11 +1536,11 @@
         <p>Once you have a contact list from Workflow 1 or an existing CRM export:</p>
         <div class="prompt-block">
           <div class="prompt-label">→ Sample Task Prompt</div>
-          <p>I'm attaching a prospect list [paste or upload CSV]. For each contact, draft a personalized first-touch email from my perspective as an SVP in corporate cash investment management. Each email should: reference something specific about their firm or role (use connected data to find a relevant hook), lead with value rather than an ask, run 4–5 sentences, and end with a soft call to action for a 20-minute intro call. Save drafts in a Google Sheet with columns for contact name, firm, email address, and draft message body. Flag any contacts where you couldn't find a relevant hook — I'll handle those manually.</p>
+          <p>I'm attaching a prospect list [paste or upload CSV]. For each contact, draft a personalized first-touch email from my perspective as an SVP in corporate cash investment management. Each email should: reference something specific about their firm or role (use connected data to find a relevant hook), lead with value rather than an ask, run 4–5 sentences, and end with a soft call to action for a 20-minute intro call. Save drafts in a Google Sheet with columns for contact name, firm, email address, and draft message body. Flag any contacts where you couldn't find a relevant hook; I'll handle those manually.</p>
         </div>
         <p>If the Outreach connector is enabled, Claude can add these contacts directly to an Outreach sequence, removing the export and re-import step entirely.</p>
         <div class="callout callout-tip">
-          <div class="callout-title">On Tone Calibration</div>
+          <div class="callout-title">Tone Calibration</div>
           <p>Review 10 drafts before approving the full batch on first use. If the register is off, add a correction to your project instructions: "Draft outreach in a formal but direct tone. Avoid 'I hope this finds you well.' Do not mention AI assistance." Cowork's project memory applies this to all subsequent sessions.</p>
         </div>
       </div>
@@ -1694,7 +1837,7 @@ Format the brief as a single Google Doc saved to my Prospecting/Call Briefs fold
         <div class="skill-meta-item"><strong>Connectors Used</strong>Apollo, Gmail, Google Sheets</div>
         <div class="skill-meta-item"><strong>Output</strong>Draft email queue, flagged items</div>
       </div>
-      <p>This skill governs tone, structure, and compliance-relevant constraints for all outreach drafts. It also instructs Claude to flag any draft where the proposed hook could be construed as an investment recommendation, a performance claim, or a statement requiring regulatory review — a meaningful safeguard when outreach references yield data, fund performance, or credit spreads.</p>
+      <p>This skill governs tone, structure, and compliance-relevant constraints for all outreach drafts. It also instructs Claude to flag any draft where the proposed hook could be construed as an investment recommendation, a performance claim, or a statement requiring regulatory review, a meaningful safeguard when outreach references yield data, fund performance, or credit spreads.</p>
       <div class="prompt-block">
         <div class="prompt-label">→ Skill Creation Prompt — Paste into Skill Body</div>
         <p>When drafting any outreach email or follow-up message, apply the following rules without exception.
@@ -2453,7 +2596,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
 <div id="appendix-github" class="appendix-divider">
   <div class="appendix-divider-eyebrow">Appendix D</div>
   <h2>Claude Cowork <em>+ GitHub</em></h2>
-  <p>How to connect Cowork to your GitHub repository so Claude can publish polished HTML analysis pages as live websites, maintain a version-controlled backup of your prospect data, and do all of it autonomously — without you touching a terminal.</p>
+  <p>How to connect Cowork to your GitHub repository so Claude can publish polished HTML analysis pages as live websites, maintain a version-controlled backup of your prospect data, and do all of it autonomously, without you touching a terminal.</p>
 </div>
 
 <div class="appendix-body">
@@ -2466,7 +2609,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
 
   <h3>Why GitHub for a Finance Prospecting Practice</h3>
 
-  <p>Most practitioners in your role manage analysis outputs and contact data through a combination of email attachments, shared Drive folders, and CRM exports. The problem with that architecture is distribution friction. Sending a prospect a PDF of your weekly market analysis means they receive a file, file it somewhere, and read it once if at all. Sending them a URL to a clean, well-designed webpage — one that updates every week, carries your name in the domain, and renders perfectly on any device — is a qualitatively different thing. It positions you as a firm that produces institutional-quality research, not someone who sends attachments.</p>
+  <p>Most practitioners in your role manage analysis outputs and contact data through a combination of email attachments, shared Drive folders, and CRM exports. The problem with that architecture is distribution friction. Sending a prospect a PDF of your weekly market analysis means they receive a file, file it somewhere, and read it once if at all. Sending them a URL to a clean, well-designed webpage that updates every week, carries your name in the domain, and renders perfectly on any device — is a qualitatively different thing. It positions you as a firm that produces institutional-quality research rather than someone who sends attachments.</p>
 
   <p>GitHub Pages makes this possible at no cost. Every repository on GitHub can have an associated Pages site at a URL in the format <code>username.github.io/repository-name</code>. Claude can publish to that URL automatically as part of any routine that produces an HTML output. The prospect receives a link, not a file. The link is always current.</p>
 
@@ -2485,7 +2628,7 @@ Save this template to Prospecting/Reviews/relationship-review-template.doc. When
       <h3>Create Your GitHub Repository</h3>
     </div>
     <div class="skill-card-body">
-      <p>Go to <code>github.com</code> and sign in. Click the <strong>+</strong> icon in the top right and select <strong>New repository</strong>. Name it something like <code>cash-investment-research</code>. Set it to <strong>Public</strong> (required for free GitHub Pages hosting) or <strong>Private</strong> if your firm's compliance policy requires it — note that private repos require a paid GitHub plan for Pages. Leave all other settings at their defaults and click <strong>Create repository</strong>.</p>
+      <p>Go to <code>github.com</code> and sign in. Click the <strong>+</strong> icon in the top right and select <strong>New repository</strong>. Name it something like <code>cash-investment-research</code>. Set it to <strong>Public</strong> (required for free GitHub Pages hosting) or <strong>Private</strong> if your firm's compliance policy requires it; note that private repos require a paid GitHub plan for Pages. Leave all other settings at their defaults and click <strong>Create repository</strong>.</p>
       <p>You now have an empty repository. You will not need to interact with it manually again after this setup — Claude will handle all future file operations.</p>
     </div>
   </div>
@@ -2836,10 +2979,448 @@ document.addEventListener('click', function(e) {
 // ─── SLIDESHOW ENGINE ──────────────────────────────────────────
 var SS = { slides: [], current: 0, built: false };
 
-function stripForSlide(html) {
-  // Prevent nested slideshow overlays and mode-toggle from appearing in slides
-  return html;
+// Each entry in SS.slides: { type, html, bg }
+// Types: title | section | content | prompt | appendix | workflow-context | workflow-prompt
+
+function mk(type, html, bg) { return { type: type, html: html, bg: bg || '' }; }
+
+function esc(str) { return str.replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function getPromptText(card) {
+  var pb = card.querySelector('.prompt-block');
+  if (!pb) return '';
+  var p = pb.querySelector('p, .prompt-text');
+  return p ? p.textContent.trim() : '';
 }
+
+function getPromptLabel(card) {
+  var pb = card.querySelector('.prompt-block');
+  if (!pb) return '';
+  var lbl = pb.querySelector('.prompt-label');
+  return lbl ? lbl.textContent.trim() : 'Prompt';
+}
+
+function metaGrid(card) {
+  var row = card.querySelector('.skill-meta-row');
+  if (!row) return '';
+  var items = row.querySelectorAll('.skill-meta-item');
+  var cells = '';
+  items.forEach(function(item) {
+    var strong = item.querySelector('strong');
+    var label = strong ? strong.textContent.trim() : '';
+    var val = item.textContent.replace(label, '').trim();
+    cells += '<div class="ss-meta-cell"><strong>' + label + '</strong><span>' + val + '</span></div>';
+  });
+  return '<div class="ss-meta-grid">' + cells + '</div>';
+}
+
+function connectorRow(card) {
+  var row = card.querySelector('.connector-row, .trigger-row, .data-sources-row');
+  return row ? '<div class="ss-connector-row">' + row.innerHTML + '</div>' : '';
+}
+
+function skillSlides(card) {
+  var badge = card.querySelector('.skill-badge') ? card.querySelector('.skill-badge').textContent.trim() : '';
+  var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+  var paras = card.querySelectorAll('.skill-card-body > p');
+  var rationale = paras.length ? paras[0].textContent.trim() : '';
+  var promptText = getPromptText(card);
+  var promptLabel = getPromptLabel(card);
+
+  var contextHtml =
+    '<div class="ss-card-header">' +
+      '<span class="ss-card-badge">' + badge + '</span>' +
+      '<span class="ss-card-title">' + title + '</span>' +
+    '</div>' +
+    metaGrid(card) +
+    '<p class="ss-rationale">' + rationale + '</p>';
+
+  var promptHtml =
+    '<div class="ss-prompt-header">' +
+      '<span class="ss-prompt-badge">' + badge + '</span>' +
+      '<span class="ss-prompt-title">' + title + '</span>' +
+      '<button class="ss-prompt-copy" data-text="' + promptText.replace(/"/g,'&quot;') + '">Copy</button>' +
+    '</div>' +
+    '<span class="ss-prompt-text">' + esc(promptText) + '</span>';
+
+  return [
+    mk('content', contextHtml),
+    mk('prompt', promptHtml)
+  ];
+}
+
+function routineSlides(card) {
+  var idx = card.querySelector('.routine-index') ? card.querySelector('.routine-index').textContent.trim() : '';
+  var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+  var freq = card.querySelector('.routine-freq') ? card.querySelector('.routine-freq').textContent.trim() : '';
+  var paras = card.querySelectorAll('.routine-body > p');
+  var rationale = paras.length ? paras[0].textContent.trim() : '';
+  var promptText = getPromptText(card);
+  var triggers = connectorRow(card);
+
+  var contextHtml =
+    '<div class="ss-card-header">' +
+      '<span class="ss-card-badge">' + idx + '</span>' +
+      '<span class="ss-card-title">' + title + '</span>' +
+    '</div>' +
+    (freq ? '<div class="ss-meta-grid"><div class="ss-meta-cell" style="grid-column:1/-1"><strong>Frequency</strong><span>' + freq + '</span></div></div>' : '') +
+    triggers +
+    (rationale ? '<p class="ss-rationale">' + rationale + '</p>' : '');
+
+  var promptHtml =
+    '<div class="ss-prompt-header">' +
+      '<span class="ss-prompt-badge">' + idx + '</span>' +
+      '<span class="ss-prompt-title">' + title + '</span>' +
+      '<button class="ss-prompt-copy" data-text="' + promptText.replace(/"/g,'&quot;') + '">Copy</button>' +
+    '</div>' +
+    '<span class="ss-prompt-text">' + esc(promptText) + '</span>';
+
+  return [
+    mk('content', contextHtml),
+    mk('prompt', promptHtml)
+  ];
+}
+
+function artifactSlides(card) {
+  var badge = card.querySelector('.artifact-type-badge') ? card.querySelector('.artifact-type-badge').textContent.trim() : '';
+  var title = card.querySelector('h3') ? card.querySelector('h3').textContent.trim() : '';
+  var desc = card.querySelector('.artifact-header-text p') ? card.querySelector('.artifact-header-text p').textContent.trim() : '';
+  var paras = card.querySelectorAll('.artifact-body > p');
+  var rationale = paras.length ? paras[0].textContent.trim() : '';
+  var promptText = getPromptText(card);
+  var sources = connectorRow(card);
+
+  var contextHtml =
+    '<div class="ss-card-header">' +
+      '<span class="ss-card-badge">' + badge + '</span>' +
+      '<span class="ss-card-title">' + title + '</span>' +
+    '</div>' +
+    (desc ? '<p style="font-size:14px;color:var(--muted);margin-bottom:20px;font-style:italic;">' + desc + '</p>' : '') +
+    sources +
+    (rationale ? '<p class="ss-rationale">' + rationale + '</p>' : '');
+
+  var promptHtml =
+    '<div class="ss-prompt-header">' +
+      '<span class="ss-prompt-badge">' + badge + '</span>' +
+      '<span class="ss-prompt-title">' + title + '</span>' +
+      '<button class="ss-prompt-copy" data-text="' + promptText.replace(/"/g,'&quot;') + '">Copy</button>' +
+    '</div>' +
+    '<span class="ss-prompt-text">' + esc(promptText) + '</span>';
+
+  return [
+    mk('content', contextHtml),
+    mk('prompt', promptHtml)
+  ];
+}
+
+function workflowSlides(wf) {
+  var num = wf.querySelector('.workflow-num') ? wf.querySelector('.workflow-num').textContent.trim() : '';
+  var title = wf.querySelector('h3') ? wf.querySelector('h3').textContent.trim() : '';
+  var replaces = wf.querySelector('.replaces-badge') ? wf.querySelector('.replaces-badge').textContent.trim() : '';
+  var paras = wf.querySelectorAll('.workflow-body > p');
+  var bodyText = paras.length ? paras[0].textContent.trim() : '';
+  var callout = wf.querySelector('.callout');
+  var promptText = getPromptText(wf);
+  var promptLabel = getPromptLabel(wf);
+
+  var contextHtml =
+    '<div class="ss-wf-tag">' + num + '</div>' +
+    '<h2 style="font-family:\'DM Serif Display\',serif;font-size:28px;font-weight:400;color:var(--ink);margin-bottom:20px;line-height:1.15;">' + title + '</h2>' +
+    (replaces ? '<div class="ss-wf-replaces">' + replaces + '</div>' : '') +
+    (bodyText ? '<p style="font-size:15px;line-height:1.7;color:#2a2822;">' + bodyText + '</p>' : '') +
+    (callout ? callout.outerHTML : '');
+
+  var promptHtml =
+    '<div class="ss-prompt-header">' +
+      '<span class="ss-prompt-badge">' + num + '</span>' +
+      '<span class="ss-prompt-title">' + title + '</span>' +
+      '<button class="ss-prompt-copy" data-text="' + promptText.replace(/"/g,'&quot;') + '">Copy</button>' +
+    '</div>' +
+    '<span class="ss-prompt-text">' + esc(promptText) + '</span>';
+
+  return [
+    mk('content', contextHtml),
+    mk('prompt', promptHtml)
+  ];
+}
+
+// Split a long prose body into paragraph-chunked slides (max ~3 paras per slide)
+function proseSlides(label, h2, bodyEl, maxParas) {
+  maxParas = maxParas || 3;
+  var children = Array.from(bodyEl.children || [bodyEl]);
+  var chunks = [];
+  var current = [];
+
+  children.forEach(function(child) {
+    if (child.tagName === 'P') {
+      current.push(child.outerHTML);
+      if (current.length >= maxParas) { chunks.push(current); current = []; }
+    } else {
+      if (current.length) { chunks.push(current); current = []; }
+      chunks.push([child.outerHTML]);
+    }
+  });
+  if (current.length) chunks.push(current);
+
+  if (!chunks.length) return [];
+
+  return chunks.map(function(chunk, i) {
+    var isFirst = i === 0;
+    var sectionLabel = isFirst && label ? '<span class="ss-section-label">' + label + '</span>' : '';
+    var heading = isFirst && h2 ? '<h2>' + h2 + '</h2>' : '';
+    return mk('section', sectionLabel + heading + '<div class="ss-body">' + chunk.join('') + '</div>');
+  });
+}
+
+function buildSlides() {
+  if (SS.built) return;
+  SS.built = true;
+  var deck = [];
+
+  // ── 0. Cover ─────────────────────────────────────────────────
+  deck.push(mk('title',
+    '<div class="ss-eyebrow">Practitioner\'s Guide · May 2026</div>' +
+    '<h1>Claude Cowork for<br><em>Finance Prospecting</em></h1>' +
+    '<p class="ss-sub">A zero-to-functional field guide for the Corporate Cash Investment SVP. No code. No technical background required.</p>' +
+    '<div class="ss-pills">' +
+      '<span class="ss-pill">Claude Cowork GA</span>' +
+      '<span class="ss-pill">Feb 2026 Plugin Expansion</span>' +
+      '<span class="ss-pill">May 2026 Finance Agents</span>' +
+      '<span class="ss-pill">4 Appendices · 7 Skills · 14 Routines · 8 Artifacts</span>' +
+    '</div>'
+  ));
+
+  // ── 1. Main body sections ────────────────────────────────────
+  document.querySelectorAll('.body-wrap > section').forEach(function(sec) {
+    var ph = sec.querySelector('.part-header');
+    if (!ph) return;
+    var labelEl = ph.querySelector('.part-label');
+    var h2El = ph.querySelector('h2');
+    var label = labelEl ? labelEl.textContent.trim() : '';
+    var h2 = h2El ? h2El.textContent.trim() : '';
+
+    // Collect intro content (before any card/workflow child)
+    var introParts = [];
+    Array.from(sec.children).forEach(function(child) {
+      if (child === ph) return;
+      if (child.classList.contains('skill-card') ||
+          child.classList.contains('routine-card') ||
+          child.classList.contains('artifact-card') ||
+          (child.id && child.id.startsWith('workflow-'))) return;
+      introParts.push(child);
+    });
+
+    // Section overview: split long prose into ≤3-para slides
+    if (introParts.length) {
+      var tmp = document.createElement('div');
+      introParts.forEach(function(n) { tmp.appendChild(n.cloneNode(true)); });
+      var slides = proseSlides(label, h2, tmp, 3);
+      slides.forEach(function(s) { deck.push(s); });
+    } else if (h2) {
+      deck.push(mk('section', '<span class="ss-section-label">' + label + '</span><h2>' + h2 + '</h2><div class="ss-body"></div>'));
+    }
+
+    // Workflow pairs
+    sec.querySelectorAll('[id^="workflow-"]').forEach(function(wf) {
+      workflowSlides(wf).forEach(function(s) { deck.push(s); });
+    });
+  });
+
+  // ── 2. Appendix sections ─────────────────────────────────────
+  document.querySelectorAll('.appendix-divider').forEach(function(divider) {
+    var eyebrowEl = divider.querySelector('.appendix-divider-eyebrow');
+    var h2El = divider.querySelector('h2');
+    var pEl = divider.querySelector('p');
+    var eyebrow = eyebrowEl ? eyebrowEl.textContent.trim() : '';
+    var h2html = h2El ? h2El.innerHTML : '';
+    var pdesc = pEl ? pEl.textContent.trim() : '';
+
+    deck.push(mk('appendix',
+      '<div class="ss-eyebrow">' + eyebrow + '</div><h2>' + h2html + '</h2><p>' + pdesc + '</p>'
+    ));
+
+    var body = divider.nextElementSibling;
+    if (!body || !body.classList.contains('appendix-body')) return;
+
+    // Intro paragraphs (before first H3 or card)
+    var introNodes = [];
+    Array.from(body.children).forEach(function(child) {
+      if (child.tagName === 'P' && !child.closest('.skill-card,.routine-card,.artifact-card')) {
+        introNodes.push(child);
+      }
+    });
+    if (introNodes.length) {
+      var tmp2 = document.createElement('div');
+      introNodes.forEach(function(n) { tmp2.appendChild(n.cloneNode(true)); });
+      proseSlides(eyebrow, '', tmp2, 3).forEach(function(s) { deck.push(s); });
+    }
+
+    // H3 sub-topic blocks (prose only, no cards)
+    body.querySelectorAll('h3').forEach(function(h3) {
+      if (h3.closest('.skill-card, .routine-card, .artifact-card')) return;
+      var parts = [h3];
+      var sib = h3.nextElementSibling;
+      var limit = 8;
+      while (sib && limit-- > 0 && sib.tagName !== 'H3' && sib.tagName !== 'HR') {
+        if (!sib.classList.contains('skill-card') &&
+            !sib.classList.contains('routine-card') &&
+            !sib.classList.contains('artifact-card')) {
+          parts.push(sib);
+        }
+        sib = sib.nextElementSibling;
+      }
+      if (parts.length > 1) {
+        var tmp3 = document.createElement('div');
+        parts.forEach(function(n) { tmp3.appendChild(n.cloneNode(true)); });
+        proseSlides(eyebrow, '', tmp3, 4).forEach(function(s) { deck.push(s); });
+      }
+    });
+
+    // Cards — each produces exactly 2 slides (context + prompt)
+    body.querySelectorAll('.skill-card').forEach(function(card) {
+      skillSlides(card).forEach(function(s) { deck.push(s); });
+    });
+    body.querySelectorAll('.routine-card').forEach(function(card) {
+      routineSlides(card).forEach(function(s) { deck.push(s); });
+    });
+    body.querySelectorAll('.artifact-card').forEach(function(card) {
+      artifactSlides(card).forEach(function(s) { deck.push(s); });
+    });
+  });
+
+  // ── 3. Closing slide ─────────────────────────────────────────
+  deck.push(mk('title',
+    '<div class="ss-eyebrow">Quick Reference</div>' +
+    '<h1>Your <em>First Task</em><br>to Run Today</h1>' +
+    '<p class="ss-sub">With setup complete, run this inside your Finance Prospecting project with the Sales plugin and Apollo connector active.</p>' +
+    '<div class="first-task" style="margin-top:32px">' +
+      '<div class="ft-label">→ Paste This Into Cowork</div>' +
+      '<p>Find 20 corporate treasury contacts at US investment-grade companies in the technology or healthcare sector with cash balances above $500M. For each, include name, title, company, estimated cash balance, and whether Apollo has a verified email. Export to a Google Sheet in my Prospecting folder called "May 2026 Initial Coverage List."</p>' +
+    '</div>'
+  ));
+
+  SS.slides = deck;
+
+  // ── Render into DOM ──────────────────────────────────────────
+  var viewport = document.getElementById('ssViewport');
+  viewport.innerHTML = '';
+
+  deck.forEach(function(slide, i) {
+    var el = document.createElement('div');
+    el.className = 'ss-slide type-' + slide.type;
+    el.dataset.index = i;
+    var inner = document.createElement('div');
+    inner.className = 'ss-slide-inner';
+    inner.innerHTML = slide.html;
+    el.appendChild(inner);
+    viewport.appendChild(el);
+  });
+
+  // Thumb dots
+  var strip = document.getElementById('ssThumbStrip');
+  strip.innerHTML = '';
+  deck.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.className = 'ss-thumb';
+    dot.dataset.index = i;
+    dot.addEventListener('click', function() { goToSlide(parseInt(this.dataset.index)); });
+    strip.appendChild(dot);
+  });
+
+  document.getElementById('ssTotalNum').textContent = deck.length;
+
+  // Wire up prompt copy buttons inside slides
+  document.querySelectorAll('.ss-prompt-copy').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var text = this.getAttribute('data-text');
+      var b = this;
+      function confirm() {
+        b.textContent = 'Copied ✓'; b.classList.add('copied');
+        setTimeout(function() { b.textContent = 'Copy'; b.classList.remove('copied'); }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(confirm).catch(function() { fallbackCopy(text, confirm); });
+      } else { fallbackCopy(text, confirm); }
+    });
+  });
+}
+
+function goToSlide(n) {
+  var total = SS.slides.length;
+  if (n < 0 || n >= total) return;
+  var viewport = document.getElementById('ssViewport');
+  var slides = Array.from(viewport.querySelectorAll('.ss-slide'));
+  var prev = SS.current;
+  var fwd = n > prev;
+
+  // Exit prev
+  slides[prev].classList.remove('active');
+  slides[prev].classList.toggle('exit-left', fwd);
+  if (!fwd) { slides[prev].style.transform = 'translateX(60px)'; slides[prev].style.opacity = '0'; }
+  var old = slides[prev];
+  setTimeout(function() {
+    old.classList.remove('exit-left');
+    old.style.transform = ''; old.style.opacity = '';
+  }, 380);
+
+  SS.current = n;
+  slides[n].scrollTop = 0;
+
+  if (!fwd) {
+    slides[n].style.transform = 'translateX(-60px)';
+    slides[n].style.opacity = '0';
+    slides[n].style.transition = 'none';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        slides[n].style.transition = '';
+        slides[n].classList.add('active');
+        slides[n].style.transform = '';
+        slides[n].style.opacity = '';
+      });
+    });
+  } else {
+    slides[n].classList.add('active');
+  }
+  updateSlideshow();
+}
+
+function slideshowNav(dir) { goToSlide(SS.current + dir); }
+
+function updateSlideshow() {
+  var total = SS.slides.length;
+  var cur = SS.current;
+  document.getElementById('ssCurrentNum').textContent = cur + 1;
+  document.getElementById('ssProgressFill').style.width = ((cur + 1) / total * 100) + '%';
+  document.getElementById('ssPrevBtn').disabled = cur === 0;
+  document.getElementById('ssNextBtn').disabled = cur === total - 1;
+  document.querySelectorAll('.ss-thumb').forEach(function(dot, i) {
+    dot.classList.toggle('active', i === cur);
+    dot.classList.toggle('near', Math.abs(i - cur) === 1);
+  });
+}
+
+function enterSlideshow() {
+  buildSlides();
+  var overlay = document.getElementById('slideshowOverlay');
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  var slides = document.querySelectorAll('.ss-slide');
+  slides.forEach(function(s) { s.classList.remove('active','exit-left'); s.style.transform=''; s.style.opacity=''; });
+  if (slides[SS.current]) slides[SS.current].classList.add('active');
+  updateSlideshow();
+}
+
+function exitSlideshow() {
+  document.getElementById('slideshowOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('slideshowOverlay').classList.contains('active')) return;
+  if (e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ') { e.preventDefault(); slideshowNav(1); }
+  else if (e.key==='ArrowLeft'||e.key==='ArrowUp') { e.preventDefault(); slideshowNav(-1); }
+  else if (e.key==='Escape') { exitSlideshow(); }
+});
 
 function buildSlides() {
   if (SS.built) return;
@@ -3104,9 +3685,9 @@ function exitSlideshow() {
 
 document.addEventListener('keydown', function(e) {
   if (!document.getElementById('slideshowOverlay').classList.contains('active')) return;
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); slideshowNav(1); }
-  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); slideshowNav(-1); }
-  else if (e.key === 'Escape') { exitSlideshow(); }
+  if (e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' ') { e.preventDefault(); slideshowNav(1); }
+  else if (e.key==='ArrowLeft'||e.key==='ArrowUp') { e.preventDefault(); slideshowNav(-1); }
+  else if (e.key==='Escape') { exitSlideshow(); }
 });
 </script>
 
