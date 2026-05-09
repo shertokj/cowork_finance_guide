@@ -968,7 +968,7 @@
   .ss-slide.type-prompt {
     background: #0d0d0b;
     align-items: flex-start;
-    padding: 40px 56px;
+    padding: 28px 40px;
   }
   .ss-slide.type-prompt .ss-prompt-header {
     display: flex;
@@ -1012,12 +1012,17 @@
   .ss-slide.type-prompt .ss-prompt-copy.copied { background: rgba(40,200,64,0.12); color: #28c840; border-color: rgba(40,200,64,0.3); }
   .ss-slide.type-prompt .ss-prompt-text {
     font-family: 'DM Mono', monospace;
-    font-size: 13.5px;
-    line-height: 1.85;
+    font-size: 12.5px;
+    line-height: 1.75;
     color: #f0ece4;
     white-space: pre-wrap;
     display: block;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    padding-right: 8px;
   }
+  .ss-slide.type-prompt .ss-prompt-text::-webkit-scrollbar { width: 3px; }
+  .ss-slide.type-prompt .ss-prompt-text::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.3); border-radius: 2px; }
 
   /* Workflow slides */
   .ss-wf-tag {
@@ -1094,25 +1099,28 @@
   }
 
   /* Thumbnail strip */
-  .ss-thumbstrip {
+  .ss-segment-bar {
+    flex: 1;
     display: flex;
-    gap: 4px;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    padding: 0 24px;
+    gap: 3px;
+    padding: 0 20px;
     overflow: hidden;
   }
-  .ss-thumb {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: rgba(245,242,236,0.18);
-    transition: background 0.2s, transform 0.2s;
-    flex-shrink: 0;
+  .ss-seg {
+    height: 3px;
+    flex: 1;
+    max-width: 40px;
+    background: rgba(245,242,236,0.12);
+    border-radius: 2px;
+    transition: background 0.25s;
     cursor: pointer;
   }
-  .ss-thumb.active { background: var(--gold); transform: scale(1.4); }
-  .ss-thumb.near { background: rgba(245,242,236,0.35); }
+  .ss-seg.active { background: var(--gold); }
+  .ss-seg.near { background: rgba(245,242,236,0.28); }
+  /* keep .ss-thumb for compat */
+  .ss-thumb { display: none; }
 
   /* Scrollbar styling inside slides */
   .ss-slide::-webkit-scrollbar { width: 4px; }
@@ -3430,11 +3438,14 @@ function proseSlides(label, h2, bodyEl, maxParas) {
   });
   if (current.length) chunks.push(current);
 
+  // Filter out empty chunks
+  chunks = chunks.filter(function(c) { return c.join('').replace(/<[^>]+>/g,'').trim().length > 0; });
   if (!chunks.length) return [];
 
   return chunks.map(function(chunk, i) {
     var isFirst = i === 0;
-    var sectionLabel = isFirst && label ? '<span class="ss-section-label">' + label + '</span>' : '';
+    // Always show the label; show h2 only on first chunk
+    var sectionLabel = label ? '<span class="ss-section-label">' + label + '</span>' : '';
     var heading = isFirst && h2 ? '<h2>' + h2 + '</h2>' : '';
     return mk('section', sectionLabel + heading + '<div class="ss-body">' + chunk.join('') + '</div>');
   });
@@ -3473,7 +3484,17 @@ function buildSlides() {
       if (child.classList.contains('skill-card') ||
           child.classList.contains('routine-card') ||
           child.classList.contains('artifact-card') ||
+          child.classList.contains('steps') ||
+          child.classList.contains('stack-grid') ||
+          child.classList.contains('pricing-table') ||
           (child.id && child.id.startsWith('workflow-'))) return;
+      // Only include p, h3, callout — not tables or complex components
+      var tag = child.tagName;
+      if (tag !== 'P' && tag !== 'H3' &&
+          !child.classList.contains('callout') &&
+          !child.classList.contains('prompt-block') &&
+          !child.classList.contains('first-task') &&
+          !child.classList.contains('connector-row')) return;
       introParts.push(child);
     });
 
@@ -3508,7 +3529,11 @@ function buildSlides() {
 
     var introNodes = [];
     Array.from(body.children).forEach(function(child) {
-      if (child.tagName === 'P' && !child.closest('.skill-card,.routine-card,.artifact-card')) {
+      // Only top-level <p> elements for intro slides (no cards, no complex blocks)
+      if (child.tagName === 'P' &&
+          !child.closest('.skill-card') &&
+          !child.closest('.routine-card') &&
+          !child.closest('.artifact-card')) {
         introNodes.push(child);
       }
     });
@@ -3576,16 +3601,20 @@ function buildSlides() {
     viewport.appendChild(el);
   });
 
-  // ── Build thumb dots ──
+  // ── Build segment bar ──
   var strip = document.getElementById('ssThumbStrip');
   strip.innerHTML = '';
-  deck.forEach(function(_, i) {
-    var dot = document.createElement('div');
-    dot.className = 'ss-thumb';
-    dot.dataset.index = i;
-    dot.addEventListener('click', function() { goToSlide(parseInt(this.dataset.index)); });
-    strip.appendChild(dot);
-  });
+  // Group slides into max 40 segments for readability
+  var total = deck.length;
+  var segCount = Math.min(total, 40);
+  for (var si = 0; si < segCount; si++) {
+    var seg = document.createElement('div');
+    seg.className = 'ss-seg';
+    seg.dataset.segIndex = si;
+    seg.dataset.slideIndex = Math.round(si * (total - 1) / Math.max(segCount - 1, 1));
+    seg.addEventListener('click', function() { goToSlide(parseInt(this.dataset.slideIndex)); });
+    strip.appendChild(seg);
+  }
 
   document.getElementById('ssTotalNum').textContent = deck.length;
 }
@@ -3641,9 +3670,12 @@ function updateSlideshow() {
   document.getElementById('ssProgressFill').style.width = ((cur + 1) / total * 100) + '%';
   document.getElementById('ssPrevBtn').disabled = cur === 0;
   document.getElementById('ssNextBtn').disabled = cur === total - 1;
-  document.querySelectorAll('.ss-thumb').forEach(function(dot, i) {
-    dot.classList.toggle('active', i === cur);
-    dot.classList.toggle('near', Math.abs(i - cur) === 1);
+  var segs = document.querySelectorAll('.ss-seg');
+  var segCount2 = segs.length;
+  var activeSeg = Math.round(cur * (segCount2 - 1) / Math.max(total - 1, 1));
+  segs.forEach(function(seg, si) {
+    seg.classList.toggle('active', si === activeSeg);
+    seg.classList.toggle('near', Math.abs(si - activeSeg) === 1);
   });
 }
 
@@ -3694,7 +3726,7 @@ document.addEventListener('keydown', function(e) {
     <button class="ss-nav-btn" id="ssPrevBtn" onclick="slideshowNav(-1)" disabled>
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev
     </button>
-    <div class="ss-thumbstrip" id="ssThumbStrip"></div>
+    <div class="ss-segment-bar" id="ssThumbStrip"></div>
     <span class="ss-nav-hint">← → keys · Esc to exit</span>
     <button class="ss-nav-btn" id="ssNextBtn" onclick="slideshowNav(1)">
       Next<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-left:6px"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
