@@ -103,6 +103,40 @@
     border-radius: 2px;
   }
 
+  .masthead-actions {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .masthead-slideshow-btn {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .masthead-slideshow-btn:hover {
+    background: #d4b05a;
+    transform: translateY(-1px);
+  }
+  .masthead-scroll-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(245,242,236,0.4);
+    text-transform: uppercase;
+  }
+
   /* ─── NAV ─── */
   .toc-bar {
     background: var(--cream);
@@ -174,11 +208,17 @@
   /* ─── COMPONENT STACK DIAGRAM ─── */
   .stack-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--rule);
     border: 1px solid var(--rule);
     margin: 32px 0;
+  }
+  @media (max-width: 800px) {
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .stack-grid { grid-template-columns: 1fr; }
   }
   .stack-card {
     background: var(--paper);
@@ -234,7 +274,7 @@
   }
   .step-num::before { content: counter(step, decimal-leading-zero); }
   .step-body { flex: 1; }
-  .step-body strong {
+  .step-body > strong {
     display: block;
     font-size: 15px;
     font-weight: 500;
@@ -242,6 +282,7 @@
     color: var(--ink);
   }
   .step-body p { font-size: 14px; color: #4a4640; margin-bottom: 10px; }
+  .step-body p strong { display: inline; font-size: inherit; font-weight: 600; }
 
   /* ─── CONNECTOR TAGS ─── */
   .connector-row {
@@ -486,26 +527,29 @@
     margin: 0;
   }
 
-  /* ─── MODE TOGGLE BUTTON ─── */
-  .toc-spacer { flex: 1; }
-  .mode-toggle {
+  /* ─── FOOTER ─── */
+  .footer {
+    background: var(--cream);
+    border-top: 1px solid var(--rule);
+    padding: 36px 48px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-left {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: var(--ink);
-    color: var(--gold);
-    border: 1px solid rgba(200,168,75,0.4);
-    border-radius: 3px;
-    padding: 6px 14px;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: background 0.2s, color 0.2s;
+    color: var(--muted);
+    letter-spacing: 0.08em;
   }
-  .mode-toggle:hover { background: #2a2820; color: #f0d070; }
+  .footer-right { font-size: 12px; color: var(--muted); }
+  .footer-right a { color: var(--slate); text-decoration: none; }
+  .footer-right a:hover { text-decoration: underline; }
+
+  /* ─── DIVIDER ─── */
+  .rule { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
 
   /* ─── SLIDESHOW OVERLAY ─── */
   #slideshowOverlay {
@@ -1116,29 +1160,27 @@
     <span class="meta-pill">Feb 2026 Plugin Expansion</span>
     <span class="meta-pill">May 2026 Finance Agents</span>
   </div>
+  <div class="masthead-actions">
+    <button class="masthead-slideshow-btn" onclick="enterSlideshow()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right:8px;vertical-align:middle"><rect x="1" y="2" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M6 14h4M8 12v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M6 6l4 2-4 2V6z" fill="currentColor"/></svg>
+      Present as Slideshow
+    </button>
+    <span class="masthead-scroll-hint">or scroll to read</span>
+  </div>
 </header>
 
 <!-- STICKY NAV -->
 <nav class="toc-bar">
   <a href="#overview">Overview</a>
   <a href="#setup">Setup</a>
-  <a href="#workflow-1">Contact Lists</a>
-  <a href="#workflow-2">Pre-Call Brief</a>
-  <a href="#workflow-3">Outreach</a>
-  <a href="#workflow-4">Daily Digest</a>
-  <a href="#scheduled">Scheduled Tasks</a>
+  <a href="#workflows">Workflows</a>
+  <a href="#scheduled">Scheduled</a>
   <a href="#caveats">Boundaries</a>
   <a href="#stack">Stack</a>
-  <a href="#first-task">First Task</a>
-  <a href="#appendix-skills">A · Skills</a>
-  <a href="#appendix-routines">B · Routines</a>
-  <a href="#appendix-artifacts">C · Artifacts</a>
-  <a href="#appendix-github">D · GitHub</a>
-  <div class="toc-spacer"></div>
-  <button class="mode-toggle" id="modeToggle" onclick="enterSlideshow()">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:6px"><rect x="1" y="1" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 12h4M7 10v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-    Slideshow
-  </button>
+  <a href="#appendix-skills">Skills</a>
+  <a href="#appendix-routines">Routines</a>
+  <a href="#appendix-artifacts">Artifacts</a>
+  <a href="#appendix-github">GitHub</a>
 </nav>
 
 <!-- BODY -->
@@ -1155,39 +1197,58 @@
 
     <p>The goal is a working prospecting workflow: one that researches institutions, surfaces contacts, drafts outreach, and maintains a running contact log without you coordinating every step. No code is written, no technical configuration is required, and no platform terms are violated. Every tool referenced here is either a native Anthropic product or a verified connector from the February or May 2026 launches.</p>
 
-    <h3>The Five Layers</h3>
-    <p>Claude Cowork is not a conversational interface. It is an autonomous agent that operates inside the Claude Desktop app, capable of multi-step action on your behalf: reading files, navigating your browser, writing documents, querying connected data services. The distinction from standard chat is structural. In chat, you issue prompts and receive responses in sequence; in Cowork, you describe an outcome and Claude plans and executes the steps required to reach it, surfacing its reasoning as it goes and asking for course corrections only when they are genuinely needed.</p>
+    <h3>The Eight Layers</h3>
+    <p>Claude Cowork is not a conversational interface. It is an autonomous agent inside the Claude Desktop app that takes multi-step action on your behalf: reading files, navigating your browser, writing documents, querying connected data services, and publishing outputs to GitHub Pages. The distinction from standard chat is structural — you describe an outcome and Claude executes the steps required to reach it, surfacing reasoning as it goes and asking for course corrections only when genuinely needed.</p>
+    <p>A fully configured setup for a cash investment SVP stacks eight layers. This guide covers setup and operation of all of them.</p>
 
     <div class="stack-grid">
       <div class="stack-card">
         <div class="stack-card-icon">🖥</div>
         <div class="stack-card-label">Container</div>
         <div class="stack-card-title">Claude Desktop</div>
-        <p>Everything runs here. Chat, Cowork, and Code live in one app. Cowork is the tab you'll use.</p>
+        <p>Chat, Cowork, and Code in one app. Cowork is the autonomous agent tab.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">🔌</div>
-        <div class="stack-card-label">Pre-Packaged Skill Sets</div>
+        <div class="stack-card-label">Pre-Packaged Domain Sets</div>
         <div class="stack-card-title">Plugins</div>
-        <p>Finance Analysis, Investment Banking, Equity Research, Market Researcher, Sales — each bundles skills, connectors, and slash commands for a specific domain.</p>
+        <p>Financial Analysis, Sales, Market Researcher — each bundles skills, connectors, and slash commands.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">⚡</div>
         <div class="stack-card-label">Live Data Pipes</div>
         <div class="stack-card-title">Connectors</div>
-        <p>FactSet, MSCI, S&P Global, LSEG, Morningstar, PitchBook, Moody's, Apollo, Clay, Google Workspace. Claude queries these mid-task, no tab switching.</p>
+        <p>FactSet, S&P, LSEG, Moody's, Apollo, Clay, Google Workspace. Queried mid-task, no tab switching.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">🌐</div>
-        <div class="stack-card-label">Browser Control</div>
+        <div class="stack-card-label">Browser Automation</div>
         <div class="stack-card-title">Claude in Chrome</div>
-        <p>When no connector exists, Claude navigates your browser directly. IR pages, filings, conference speaker directories, regulatory sites.</p>
+        <p>When no connector exists, Claude navigates your browser directly — IR pages, filings, conference directories.</p>
       </div>
       <div class="stack-card">
         <div class="stack-card-icon">🧠</div>
         <div class="stack-card-label">Domain Knowledge</div>
         <div class="stack-card-title">Skills</div>
-        <p>Expertise baked into plugins. Fire automatically when relevant, or invoke manually with slash commands like <code>/market-researcher</code> or <code>/comps</code>.</p>
+        <p>7 custom skills covering contact classification, pre-call research, outreach, credit monitoring, and more. See Appendix A.</p>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🔁</div>
+        <div class="stack-card-label">Operating Cadence</div>
+        <div class="stack-card-title">Routines</div>
+        <p>14 named routines — daily digests, weekly refreshes, monthly sweeps, quarterly reviews. See Appendix B.</p>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">📊</div>
+        <div class="stack-card-label">Persistent Infrastructure</div>
+        <div class="stack-card-title">Artifacts</div>
+        <p>8 live documents in Google Drive that routines write to continuously — coverage sheet, outreach queue, credit log. See Appendix C.</p>
+      </div>
+      <div class="stack-card">
+        <div class="stack-card-icon">🐙</div>
+        <div class="stack-card-label">Publishing + Backup</div>
+        <div class="stack-card-title">GitHub</div>
+        <p>Weekly HTML analysis pages published as live prospect-facing URLs. Data backed up as versioned CSVs. See Appendix D.</p>
       </div>
     </div>
   </section>
@@ -2709,6 +2770,16 @@ Authentication: Use the GitHub credentials stored in project context. Never log,
 
 </div>
 
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-left">CLAUDE COWORK — FINANCE PROSPECTING GUIDE · MAY 2026</div>
+  <div class="footer-right">
+    Docs: <a href="https://support.claude.com" target="_blank">support.claude.com</a> &nbsp;·&nbsp;
+    Finance plugins: <a href="https://github.com/anthropics/financial-services" target="_blank">github.com/anthropics/financial-services</a>
+  </div>
+</footer>
+
+<script>
 // Transform all .prompt-block elements into terminal UI
 document.querySelectorAll('.prompt-block').forEach(function(block) {
   // Get the label text
